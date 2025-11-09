@@ -7,21 +7,21 @@ import '../utils/api_endpoints.dart';
 class DashboardApi {
   final box = GetStorage();
   Future<DashboardDataModel> fetchDashboard() async {
-    final url =
-        Uri.parse(ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.dashboard);
+    final url = Uri.parse(
+      ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.dashboard,
+    );
 
     var response = await http.get(
       url,
-      headers: {
-        'Authorization': 'Bearer ${box.read("userToken")}',
-      },
+      headers: {'Authorization': 'Bearer ${box.read("userToken")}'},
     );
 
     if (response.statusCode == 200) {
       // print(response.statusCode.toString());
       // print(response.body.toString());
-      final dashboardModel =
-          DashboardDataModel.fromJson(json.decode(response.body));
+      final dashboardModel = DashboardDataModel.fromJson(
+        json.decode(response.body),
+      );
 
       return dashboardModel;
     } else {

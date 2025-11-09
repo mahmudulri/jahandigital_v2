@@ -9,21 +9,21 @@ import '../utils/api_endpoints.dart';
 class CompaniesApi {
   final box = GetStorage();
   Future<CompaniesModel> fetchcompanies() async {
-    final url =
-        Uri.parse(ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.companies);
+    final url = Uri.parse(
+      ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.companies,
+    );
     print(url);
 
     var response = await http.get(
       url,
-      headers: {
-        'Authorization': 'Bearer ${box.read("userToken")}',
-      },
+      headers: {'Authorization': 'Bearer ${box.read("userToken")}'},
     );
 
     if (response.statusCode == 200) {
       // print(response.body.toString());
-      final companiesModel =
-          CompaniesModel.fromJson(json.decode(response.body));
+      final companiesModel = CompaniesModel.fromJson(
+        json.decode(response.body),
+      );
 
       return companiesModel;
     } else {

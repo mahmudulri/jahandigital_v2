@@ -87,6 +87,9 @@ class _CreditTransferState extends State<CreditTransfer> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    customRechargeController.numberController.clear();
+    customRechargeController.amountController.clear();
+    customRechargeController.pinController.clear();
     currencyController.fetchCurrency();
     customhistoryController.finalList.clear();
     customhistoryController.initialpage = 1;
@@ -155,11 +158,18 @@ class _CreditTransferState extends State<CreditTransfer> {
                         ),
                         Spacer(),
                         Obx(
-                          () => Text(
-                            languagesController.tr("CREDIT_TRANSFER"),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: screenWidth * 0.040,
+                          () => GestureDetector(
+                            onTap: () {
+                              customhistoryController.finalList.clear();
+                              customhistoryController.initialpage = 1;
+                              customhistoryController.fetchHistory();
+                            },
+                            child: Text(
+                              languagesController.tr("CREDIT_TRANSFER"),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: screenWidth * 0.040,
+                              ),
                             ),
                           ),
                         ),
@@ -212,8 +222,7 @@ class _CreditTransferState extends State<CreditTransfer> {
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: NetworkImage(
-                                    countryListController.flagimageurl
-                                        .toString(),
+                                    box.read("afghanistan_flag").toString(),
                                   ),
                                 ),
                               ),
@@ -651,7 +660,7 @@ class _CreditTransferState extends State<CreditTransfer> {
                                                                                                 }
                                                                                               },
                                                                                               child: Container(
-                                                                                                height: 60,
+                                                                                                height: 50,
                                                                                                 width: 120,
                                                                                                 decoration: BoxDecoration(
                                                                                                   color: Colors.green,

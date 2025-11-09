@@ -61,7 +61,7 @@ class CustomRechargeController extends GetxController {
       placeingLoading.value = true;
       var url = Uri.parse("${ApiEndPoints.baseUrl}custom-recharge");
       Map body = {
-        'country_id': box.read("country_id"),
+        'country_id': box.read("afghanistan_id"),
         'rechargeble_account': numberController.text,
         'amount': amountController.text,
       };

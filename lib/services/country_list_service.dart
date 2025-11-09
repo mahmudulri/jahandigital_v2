@@ -9,21 +9,40 @@ import '../utils/api_endpoints.dart';
 class CountryListApi {
   final box = GetStorage();
   Future<CountryListModel> fetchCountryList() async {
-    final url =
-        Uri.parse("https://app-api-vpro-jd.milliekit.com/api/public/countries");
+    final url = Uri.parse(
+      "https://app-api-vpro-jd.milliekit.com/api/public/countries",
+    );
     print(url);
 
     var response = await http.get(
       url,
-      headers: {
-        'Authorization': 'Bearer ${box.read("userToken")}',
-      },
+      headers: {'Authorization': 'Bearer ${box.read("userToken")}'},
     );
 
     if (response.statusCode == 200) {
-      // print(response.body.toString());
-      final countryModel =
-          CountryListModel.fromJson(json.decode(response.body));
+      final countryModel = CountryListModel.fromJson(
+        json.decode(response.body),
+      );
+
+      Country? afghanistan;
+      try {
+        afghanistan = countryModel.data?.countries.firstWhere(
+          (c) => c.countryName == "Afghanistan",
+        );
+      } catch (e) {
+        afghanistan = null;
+      }
+
+      if (afghanistan != null) {
+        // ✅ Save in GetStorage
+        box.write("afghanistan_id", afghanistan.id);
+        box.write("afghanistan_flag", afghanistan.countryFlagImageUrl);
+        print(
+          "Saved Afghanistan -> id: ${afghanistan.id}, flag: ${afghanistan.countryFlagImageUrl}",
+        );
+      } else {
+        print("Afghanistan not found in country list");
+      }
 
       return countryModel;
     } else {

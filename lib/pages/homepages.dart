@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:jahandigital/controllers/bundle_controller.dart';
 import 'package:jahandigital/controllers/confirm_pin_controller.dart';
 import 'package:jahandigital/controllers/country_list_controller.dart';
@@ -78,8 +79,33 @@ class _HomepagesState extends State<Homepages> {
   @override
   void initState() {
     super.initState();
+    _checkforUpdate();
     companyController.fetchCompany();
     sliderController.fetchSliderData();
+  }
+
+  Future<void> _checkforUpdate() async {
+    print("checking");
+    await InAppUpdate.checkForUpdate()
+        .then((info) {
+          setState(() {
+            if (info.updateAvailability == UpdateAvailability.updateAvailable) {
+              print("update available");
+              _update();
+            }
+          });
+        })
+        .catchError((error) {
+          print(error.toString());
+        });
+  }
+
+  void _update() async {
+    print("Updating");
+    await InAppUpdate.startFlexibleUpdate();
+    InAppUpdate.completeFlexibleUpdate().then((_) {}).catchError((error) {
+      print(error.toString());
+    });
   }
 
   final confirmPinController = Get.find<ConfirmPinController>();
@@ -175,20 +201,25 @@ class _HomepagesState extends State<Homepages> {
                         () => dashboardController.isLoading.value == false
                             ? Column(
                                 children: [
-                                  Text(
-                                    dashboardController
-                                        .alldashboardData
-                                        .value
-                                        .data!
-                                        .userInfo!
-                                        .resellerName
-                                        .toString(),
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize:
-                                          MediaQuery.of(context).size.height *
-                                          0.022,
+                                  GestureDetector(
+                                    onTap: () {
+                                      dashboardController.fetchDashboardData();
+                                    },
+                                    child: Text(
+                                      dashboardController
+                                          .alldashboardData
+                                          .value
+                                          .data!
+                                          .userInfo!
+                                          .resellerName
+                                          .toString(),
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w300,
+                                        fontSize:
+                                            MediaQuery.of(context).size.height *
+                                            0.022,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -354,6 +385,9 @@ class _HomepagesState extends State<Homepages> {
                       CreditTransfer(),
                       isMainPage: false,
                     );
+
+                    print(box.read("afghanistan_id"));
+                    print(box.read("afghanistan_flag"));
                   },
                 ),
               ),
