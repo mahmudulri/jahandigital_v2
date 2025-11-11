@@ -17,6 +17,7 @@ import 'package:jahandigital/utils/colors.dart';
 import 'package:jahandigital/widgets/bottomsheet.dart';
 import 'package:jahandigital/widgets/button_one.dart';
 import 'package:intl/intl.dart';
+import 'package:jahandigital/widgets/custom_text.dart';
 import 'package:jahandigital/widgets/drawer.dart';
 import '../controllers/categories_controller.dart';
 import '../controllers/company_controller.dart';
@@ -51,20 +52,24 @@ class _HomepagesState extends State<Homepages> {
   final box = GetStorage();
 
   int currentIndex = 0;
-  final sliderController = Get.find<SliderController>();
 
   void _previousImage() {
     setState(() {
       currentIndex =
           (currentIndex -
               1 +
-              sliderController
-                  .allsliderlist
+              dashboardController
+                  .alldashboardData
                   .value
                   .data!
-                  .advertisements
+                  .advertisementSliders!
                   .length) %
-          sliderController.allsliderlist.value.data!.advertisements.length;
+          dashboardController
+              .alldashboardData
+              .value
+              .data!
+              .advertisementSliders!
+              .length;
     });
   }
 
@@ -72,16 +77,21 @@ class _HomepagesState extends State<Homepages> {
     setState(() {
       currentIndex =
           (currentIndex + 1) %
-          sliderController.allsliderlist.value.data!.advertisements.length;
+          dashboardController
+              .alldashboardData
+              .value
+              .data!
+              .advertisementSliders!
+              .length;
     });
   }
 
   @override
   void initState() {
     super.initState();
+
     _checkforUpdate();
     companyController.fetchCompany();
-    sliderController.fetchSliderData();
   }
 
   Future<void> _checkforUpdate() async {
@@ -142,387 +152,520 @@ class _HomepagesState extends State<Homepages> {
     final Mypagecontroller mypagecontroller = Get.find();
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Color(0xffF1F3FF),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        elevation: 0.0,
-        shadowColor: Colors.transparent,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(color: Color(0xffF1F3FF)),
-          child: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.only(left: 15, right: 15, top: 5),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 0),
-                  child: Row(
-                    children: [
-                      Obx(() {
-                        final profileImageUrl = dashboardController
-                            .alldashboardData
-                            .value
-                            .data
-                            ?.userInfo
-                            ?.profileImageUrl;
 
-                        if (dashboardController.isLoading.value ||
-                            profileImageUrl == null ||
-                            profileImageUrl.isEmpty) {
-                          return SizedBox();
-                        }
+    return Obx(() {
+      if (dashboardController.isLoading.value) {
+        return Scaffold(
+          body: Center(
+            child: GestureDetector(
+              onTap: () {
+                print(dashboardController.isLoading.value.toString());
+              },
+              child: CircularProgressIndicator(color: Colors.grey),
+            ),
+          ),
+        );
+      } else if (dashboardController.myerror.value.trim().toLowerCase() ==
+          "deactivated") {
+        return Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  dashboardController.myerror.toString(),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
 
-                        return Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(3),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 70),
+                  child: GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(17),
+                            ),
+                            contentPadding: EdgeInsets.all(0),
+                            content: ContactDialogBox(),
+                          );
+                        },
+                      );
+                    },
+                    child: Container(
+                      height: 45,
+                      width: screenWidth,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/icons/whatsapp.png",
+                            height: 30,
                             color: Colors.white,
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(3),
-                            child: Image.network(
-                              profileImageUrl,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Icon(
-                                  Icons.account_circle,
-                                  size: 50,
-                                  color: Colors.grey,
-                                ); // fallback icon
-                              },
-                            ),
+                          SizedBox(width: 20),
+                          KText(
+                            text: languagesController.tr("CONTACTUS"),
+                            color: Colors.white,
                           ),
-                        );
-                      }),
-                      Spacer(),
-                      Obx(
-                        () => dashboardController.isLoading.value == false
-                            ? Column(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      dashboardController.fetchDashboardData();
-                                    },
-                                    child: Text(
-                                      dashboardController
-                                          .alldashboardData
-                                          .value
-                                          .data!
-                                          .userInfo!
-                                          .resellerName
-                                          .toString(),
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w300,
-                                        fontSize:
-                                            MediaQuery.of(context).size.height *
-                                            0.022,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : SizedBox(),
+                        ],
                       ),
-                      Spacer(),
-                      GestureDetector(
-                        onTap: () {
-                          CustomFullScreenSheet.show(context);
-                        },
-                        child: Image.asset(
-                          "assets/icons/drawericon.png",
-                          height: 40,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          contentPadding: EdgeInsets.all(0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          content: LogoutDialogBox(),
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 5,
+                      ),
+                      child: Text(
+                        languagesController.tr("LOGOUT"),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
-                    ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      } else {
+        return Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: Color(0xffF1F3FF),
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            elevation: 0.0,
+            shadowColor: Colors.transparent,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(color: Color(0xffF1F3FF)),
+              child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 5),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 0),
+                      child: Row(
+                        children: [
+                          Obx(() {
+                            final profileImageUrl = dashboardController
+                                .alldashboardData
+                                .value
+                                .data
+                                ?.userInfo
+                                ?.profileImageUrl;
+
+                            if (dashboardController.isLoading.value ||
+                                profileImageUrl == null ||
+                                profileImageUrl.isEmpty) {
+                              return SizedBox();
+                            }
+
+                            return Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(3),
+                                color: Colors.white,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(3),
+                                child: Image.network(
+                                  profileImageUrl,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Icon(
+                                      Icons.account_circle,
+                                      size: 50,
+                                      color: Colors.grey,
+                                    ); // fallback icon
+                                  },
+                                ),
+                              ),
+                            );
+                          }),
+                          Spacer(),
+                          Obx(
+                            () => dashboardController.isLoading.value == false
+                                ? Column(
+                                    children: [
+                                      Text(
+                                        dashboardController
+                                            .alldashboardData
+                                            .value
+                                            .data!
+                                            .userInfo!
+                                            .resellerName
+                                            .toString(),
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize:
+                                              MediaQuery.of(
+                                                context,
+                                              ).size.height *
+                                              0.022,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox(),
+                          ),
+                          Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              CustomFullScreenSheet.show(context);
+                            },
+                            child: Image.asset(
+                              "assets/icons/drawericon.png",
+                              height: 40,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
-      body: Container(
-        decoration: BoxDecoration(color: Color(0xffF1F3FF)),
-        height: screenHeight,
-        width: screenWidth,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child: ListView(
-            physics: BouncingScrollPhysics(),
-            children: [
-              Row(
+          body: Container(
+            decoration: BoxDecoration(color: Color(0xffF1F3FF)),
+            height: screenHeight,
+            width: screenWidth,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: ListView(
+                physics: BouncingScrollPhysics(),
                 children: [
-                  Obx(
-                    () => Text(
-                      languageController.tr("STATUS"),
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.045,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xff8082ED),
-                        fontFamily: languagesController.selectedlan == "Fa"
-                            ? "Iranfont"
-                            : "Roboto",
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Container(height: 1, color: Colors.grey.shade300),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Container(
-                height: 140,
-                width: screenWidth,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 10,
-                  ),
-                  child: Column(
+                  Row(
                     children: [
-                      Container(
-                        height: 50,
-                        width: screenWidth,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: PageView(
-                          controller: _pageController,
-                          physics:
-                              NeverScrollableScrollPhysics(), // Disable swipe
-                          children: [
-                            BalanceWidget(),
-                            SaleWidget(),
-                            DebitWidget(),
-                            ProfitWidget(),
-                            CommissionWidget(),
-                          ],
+                      Obx(
+                        () => Text(
+                          languageController.tr("STATUS"),
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.045,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff8082ED),
+                            fontFamily: languagesController.selectedlan == "Fa"
+                                ? "Iranfont"
+                                : "Roboto",
+                          ),
                         ),
                       ),
-                      SizedBox(height: 20),
-                      Obx(
-                        () => Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              buildButton(languageController.tr("BALANCE"), 0),
-                              buildButton(languageController.tr("SALE"), 1),
-                              buildButton(languageController.tr("DEBIT"), 2),
-                              buildButton(languageController.tr("PROFIT"), 3),
-                              buildButton(
-                                languageController.tr("COMISSION"),
-                                4,
-                              ),
-                            ],
-                          ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Container(
+                          height: 1,
+                          color: Colors.grey.shade300,
                         ),
                       ),
                     ],
                   ),
-                ),
-              ),
-              SizedBox(height: 10),
-              Container(
-                height: 130,
-                width: screenWidth,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Obx(() {
-                        if (sliderController.isLoading.value) {
-                          return SizedBox(); // লোডিং হলে কিছু দেখাবে না
-                        }
-                        if (sliderController.allsliderlist.value.data == null ||
-                            sliderController
-                                .allsliderlist
-                                .value
-                                .data!
-                                .advertisements
-                                .isEmpty) {
-                          return Container(
-                            color: Colors.transparent,
-                          ); // যদি স্লাইডার না থাকে, তাহলে সাদা ব্যাকগ্রাউন্ড দেখাবে
-                        }
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                sliderController
-                                    .allsliderlist
-                                    .value
-                                    .data!
-                                    .advertisements[currentIndex]
-                                    .adSliderImageUrl
-                                    .toString(),
-                              ),
-                              fit: BoxFit.cover,
+                  SizedBox(height: 10),
+                  Container(
+                    height: 140,
+                    width: screenWidth,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 10,
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 50,
+                            width: screenWidth,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: PageView(
+                              controller: _pageController,
+                              physics:
+                                  NeverScrollableScrollPhysics(), // Disable swipe
+                              children: [
+                                BalanceWidget(),
+                                SaleWidget(),
+                                DebitWidget(),
+                                ProfitWidget(),
+                                CommissionWidget(),
+                              ],
                             ),
                           ),
-                        );
-                      }),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 10),
-              Obx(
-                () => CreditButton(
-                  buttonName: languagesController.tr("CREDIT_TRANSFER"),
-                  mycolor: Color(0xffFFFFFF),
-                  onpressed: () {
-                    mypagecontroller.changePage(
-                      CreditTransfer(),
-                      isMainPage: false,
-                    );
-
-                    print(box.read("afghanistan_id"));
-                    print(box.read("afghanistan_flag"));
-                  },
-                ),
-              ),
-              SizedBox(height: 5),
-              Row(
-                children: [
-                  Obx(
-                    () => Text(
-                      languageController.tr("SERVICES"),
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.045,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xff8082ED),
-                        fontFamily: languagesController.selectedlan == "Fa"
-                            ? "Iranfont"
-                            : "Roboto",
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Container(height: 1, color: Colors.grey.shade300),
-                  ),
-                ],
-              ),
-              SizedBox(height: 5),
-              Obx(
-                () => categorisListController.isLoading.value == false
-                    ? GridView.builder(
-                        shrinkWrap: true,
-                        physics: BouncingScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // Number of columns in the grid
-                          crossAxisSpacing: 8.0, // Spacing between columns
-                          mainAxisSpacing: 8.0, // Spacing between rows
-                          childAspectRatio: 2.8,
-                        ),
-                        itemCount: categorisListController
-                            .allcategorieslist
-                            .value
-                            .data!
-                            .servicecategories!
-                            .length,
-                        itemBuilder: (context, index) {
-                          final data = categorisListController
-                              .allcategorieslist
-                              .value
-                              .data!
-                              .servicecategories![index];
-
-                          final imagePath =
-                              serviceimages[index % serviceimages.length];
-                          return GestureDetector(
-                            onTap: () {
-                              box.write(
-                                "service_category_id",
-                                categorisListController
-                                    .allcategorieslist
-                                    .value
-                                    .data!
-                                    .servicecategories![index]
-                                    .id,
-                              );
-
-                              if (data.type.toString() == "nonsocial") {
-                                mypagecontroller.changePage(
-                                  InternetPack(),
-                                  isMainPage: false,
-                                );
-                                countrylistController.fetchCountryData();
-                              } else {
-                                box.write("validity_type", "");
-
-                                box.write("search_tag", "");
-                                box.write(
-                                  "service_category_id",
-                                  categorisListController
-                                      .allcategorieslist
-                                      .value
-                                      .data!
-                                      .servicecategories![index]
-                                      .id,
-                                );
-
-                                box.write("country_id", "");
-                                box.write("company_id", "");
-                                bundleController.finalList.clear();
-                                bundleController.initialpage = 1;
-
-                                mypagecontroller.changePage(
-                                  SocialBundles(),
-                                  isMainPage: false,
-                                );
-                              }
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(50),
-                              ),
+                          SizedBox(height: 20),
+                          Obx(
+                            () => Container(
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  Image.asset(
-                                    imagePath,
-                                    height: screenHeight * 0.045,
+                                  buildButton(
+                                    languageController.tr("BALANCE"),
+                                    0,
                                   ),
-                                  Text(
-                                    data.categoryName.toString(),
-                                    style: TextStyle(
-                                      color: Color(0xff454F5B),
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: screenWidth * 0.030,
-                                      fontFamily:
-                                          languagesController.selectedlan ==
-                                              "Fa"
-                                          ? "Iranfont"
-                                          : "Roboto",
-                                    ),
+                                  buildButton(languageController.tr("SALE"), 1),
+                                  buildButton(
+                                    languageController.tr("DEBIT"),
+                                    2,
+                                  ),
+                                  buildButton(
+                                    languageController.tr("PROFIT"),
+                                    3,
+                                  ),
+                                  buildButton(
+                                    languageController.tr("COMISSION"),
+                                    4,
                                   ),
                                 ],
                               ),
                             ),
-                          );
-                        },
-                      )
-                    : Center(child: CircularProgressIndicator()),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                    height: 130,
+                    width: screenWidth,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Obx(() {
+                            if (dashboardController.isLoading.value) {
+                              return SizedBox(); // লোডিং হলে কিছু দেখাবে না
+                            }
+                            if (dashboardController
+                                        .alldashboardData
+                                        .value
+                                        .data!
+                                        .advertisementSliders ==
+                                    null ||
+                                dashboardController
+                                    .alldashboardData
+                                    .value
+                                    .data!
+                                    .advertisementSliders!
+                                    .isEmpty) {
+                              return Container(
+                                color: Colors.transparent,
+                              ); // যদি স্লাইডার না থাকে, তাহলে সাদা ব্যাকগ্রাউন্ড দেখাবে
+                            }
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    dashboardController
+                                        .alldashboardData
+                                        .value
+                                        .data!
+                                        .advertisementSliders![currentIndex]
+                                        .adSliderImageUrl
+                                        .toString(),
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Obx(
+                    () => CreditButton(
+                      buttonName: languagesController.tr("CREDIT_TRANSFER"),
+                      mycolor: Color(0xffFFFFFF),
+                      onpressed: () {
+                        mypagecontroller.changePage(
+                          CreditTransfer(),
+                          isMainPage: false,
+                        );
+
+                        print(box.read("afghanistan_id"));
+                        print(box.read("afghanistan_flag"));
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Row(
+                    children: [
+                      Obx(
+                        () => Text(
+                          languageController.tr("SERVICES"),
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.045,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff8082ED),
+                            fontFamily: languagesController.selectedlan == "Fa"
+                                ? "Iranfont"
+                                : "Roboto",
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Container(
+                          height: 1,
+                          color: Colors.grey.shade300,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5),
+                  Obx(
+                    () => categorisListController.isLoading.value == false
+                        ? GridView.builder(
+                            shrinkWrap: true,
+                            physics: BouncingScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount:
+                                      2, // Number of columns in the grid
+                                  crossAxisSpacing:
+                                      8.0, // Spacing between columns
+                                  mainAxisSpacing: 8.0, // Spacing between rows
+                                  childAspectRatio: 2.8,
+                                ),
+                            itemCount: categorisListController
+                                .allcategorieslist
+                                .value
+                                .data!
+                                .servicecategories!
+                                .length,
+                            itemBuilder: (context, index) {
+                              final data = categorisListController
+                                  .allcategorieslist
+                                  .value
+                                  .data!
+                                  .servicecategories![index];
+
+                              final imagePath =
+                                  serviceimages[index % serviceimages.length];
+                              return GestureDetector(
+                                onTap: () {
+                                  box.write(
+                                    "service_category_id",
+                                    categorisListController
+                                        .allcategorieslist
+                                        .value
+                                        .data!
+                                        .servicecategories![index]
+                                        .id,
+                                  );
+
+                                  if (data.type.toString() == "nonsocial") {
+                                    mypagecontroller.changePage(
+                                      InternetPack(),
+                                      isMainPage: false,
+                                    );
+                                    countrylistController.fetchCountryData();
+                                  } else {
+                                    box.write("validity_type", "");
+
+                                    box.write("search_tag", "");
+                                    box.write(
+                                      "service_category_id",
+                                      categorisListController
+                                          .allcategorieslist
+                                          .value
+                                          .data!
+                                          .servicecategories![index]
+                                          .id,
+                                    );
+
+                                    box.write("country_id", "");
+                                    box.write("company_id", "");
+                                    bundleController.finalList.clear();
+                                    bundleController.initialpage = 1;
+
+                                    mypagecontroller.changePage(
+                                      SocialBundles(),
+                                      isMainPage: false,
+                                    );
+                                  }
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Image.asset(
+                                        imagePath,
+                                        height: screenHeight * 0.045,
+                                      ),
+                                      Text(
+                                        data.categoryName.toString(),
+                                        style: TextStyle(
+                                          color: Color(0xff454F5B),
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: screenWidth * 0.030,
+                                          fontFamily:
+                                              languagesController.selectedlan ==
+                                                  "Fa"
+                                              ? "Iranfont"
+                                              : "Roboto",
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : Center(child: CircularProgressIndicator()),
+                  ),
+                  SizedBox(height: 80),
+                ],
               ),
-              SizedBox(height: 80),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        );
+      }
+    });
   }
 
   Widget buildButton(String text, int index) {

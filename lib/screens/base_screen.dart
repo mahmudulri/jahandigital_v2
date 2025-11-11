@@ -29,7 +29,7 @@ class _NewBaseScreenState extends State<NewBaseScreen> {
   @override
   void initState() {
     super.initState();
-    dashboardController.fetchDashboardData();
+    // dashboardController.fetchDashboardData();
   }
 
   Future<bool> _showExitPopup() async {
@@ -63,6 +63,7 @@ class _NewBaseScreenState extends State<NewBaseScreen> {
   void _onTapNav(int index) {
     HapticFeedback.lightImpact();
     if (index == 0) {
+      dashboardController.fetchDashboard();
       mypagecontroller.goToMainPageByIndex(0); // Homepages()
     } else if (index == 1) {
       mypagecontroller.goToMainPageByIndex(1); // TransactionsType()

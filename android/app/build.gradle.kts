@@ -26,7 +26,7 @@ if (keystorePropertiesFile.exists()) {
 
 
 android {
-    namespace = "com.example.jahandigital"
+    namespace = "com.woosat.jahan_numa"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -40,7 +40,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.jahandigital"
+        applicationId = "com.woosat.jahan_numa"
         minSdk = flutter.minSdkVersion
         targetSdk = 35
         versionCode = flutterVersionCode

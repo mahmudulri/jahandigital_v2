@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:jahandigital/controllers/dashboard_controller.dart';
 import 'package:jahandigital/utils/api_endpoints.dart';
 
 class SignInController extends GetxController {
@@ -16,6 +17,8 @@ class SignInController extends GetxController {
 
   RxBool isLoading = false.obs;
   RxBool loginsuccess = false.obs;
+
+  final dashboardController = Get.find<DashboardController>();
 
   Future<void> signIn() async {
     try {
@@ -55,6 +58,7 @@ class SignInController extends GetxController {
       print("Response Body: ${response.statusCode}");
 
       if (response.statusCode == 200) {
+        dashboardController.fetchDashboardData();
         box.write("userToken", results["data"]["api_token"]);
         box.write(
           "countryID",

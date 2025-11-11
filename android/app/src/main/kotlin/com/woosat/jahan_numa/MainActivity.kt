@@ -1,4 +1,4 @@
-package com.example.jahandigital
+package com.woosat.jahan_numa
 
 import io.flutter.embedding.android.FlutterActivity
 

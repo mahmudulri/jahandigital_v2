@@ -21,8 +21,8 @@ class SlidersApi {
     );
 
     if (response.statusCode == 200) {
-      // print(response.statusCode.toString());
-      // print(response.body.toString());
+      print(response.statusCode.toString());
+      print(response.body.toString());
       final dashboardModel = SliderModel.fromJson(json.decode(response.body));
 
       return dashboardModel;
