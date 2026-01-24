@@ -547,7 +547,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                                                               ),
                                                           color: Colors.white,
                                                         ),
-                                                        height: 350,
+                                                        height: 370,
                                                         width: screenWidth,
                                                         child: Padding(
                                                           padding:
@@ -784,26 +784,14 @@ class _RechargeScreenState extends State<RechargeScreen> {
                                                                     MainAxisAlignment
                                                                         .spaceBetween,
                                                                 children: [
-                                                                  GestureDetector(
-                                                                    onTap: () {
-                                                                      print(
-                                                                        "1" +
-                                                                            confirmPinController.isLoading.value.toString(),
-                                                                      );
-                                                                      print(
-                                                                        "2" +
-                                                                            confirmPinController.loadsuccess.value.toString(),
-                                                                      );
-                                                                    },
-                                                                    child: Text(
-                                                                      languagesController.tr(
-                                                                        "PHONENUMBER",
-                                                                      ),
-                                                                      style: TextStyle(
-                                                                        color: Colors
-                                                                            .grey
-                                                                            .shade600,
-                                                                      ),
+                                                                  Text(
+                                                                    languagesController.tr(
+                                                                      "PHONENUMBER",
+                                                                    ),
+                                                                    style: TextStyle(
+                                                                      color: Colors
+                                                                          .grey
+                                                                          .shade600,
                                                                     ),
                                                                   ),
                                                                   Text(
@@ -815,8 +803,55 @@ class _RechargeScreenState extends State<RechargeScreen> {
                                                                 ],
                                                               ),
                                                               SizedBox(
-                                                                height: 8,
+                                                                height: 4,
                                                               ),
+                                                              Container(
+                                                                height: 50,
+                                                                width: 100,
+                                                                alignment: Alignment
+                                                                    .center, // 👈 important
+                                                                decoration: BoxDecoration(
+                                                                  border: Border.all(
+                                                                    width: 1,
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade300,
+                                                                  ),
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        10,
+                                                                      ),
+                                                                ),
+                                                                child: TextField(
+                                                                  controller:
+                                                                      confirmPinController
+                                                                          .pinController,
+                                                                  keyboardType:
+                                                                      TextInputType
+                                                                          .phone,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center, // 👈 text center
+                                                                  decoration: InputDecoration(
+                                                                    hintText:
+                                                                        languagesController.tr(
+                                                                          "PIN",
+                                                                        ),
+                                                                    border:
+                                                                        InputBorder
+                                                                            .none,
+                                                                    isDense:
+                                                                        true,
+                                                                    contentPadding:
+                                                                        EdgeInsets
+                                                                            .zero, // 👈 remove default padding
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 4,
+                                                              ),
+
                                                               SizedBox(
                                                                 height: 50,
                                                                 width:

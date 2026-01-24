@@ -105,40 +105,20 @@ class CompanyCode {
 
 class Country {
   final int? id;
-  final CountryName? countryName;
+
   final String? countryFlagImageUrl;
 
-  Country({this.id, this.countryName, this.countryFlagImageUrl});
+  Country({this.id, this.countryFlagImageUrl});
 
   factory Country.fromJson(Map<String, dynamic> json) => Country(
     id: json["id"],
-    countryName: countryNameValues.map[json["country_name"]]!,
+
     countryFlagImageUrl: json["country_flag_image_url"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
-    "country_name": countryNameValues.reverse[countryName],
+
     "country_flag_image_url": countryFlagImageUrl,
   };
-}
-
-enum CountryName { AFGHANISTAN, IRAN, TURKEY }
-
-final countryNameValues = EnumValues({
-  "Afghanistan": CountryName.AFGHANISTAN,
-  "Iran": CountryName.IRAN,
-  "Turkey": CountryName.TURKEY,
-});
-
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
 }

@@ -89,7 +89,7 @@ class _HomepagesState extends State<Homepages> {
   @override
   void initState() {
     super.initState();
-
+    dashboardController.fetchDashboard();
     _checkforUpdate();
     companyController.fetchCompany();
   }
@@ -145,6 +145,15 @@ class _HomepagesState extends State<Homepages> {
   CountryListController countrylistController = Get.put(
     CountryListController(),
   );
+
+  Future<void> bodyrefresh() async {
+    // This function is called when the user pulls down the ListView
+    print("ListView pulled down!");
+
+    dashboardController.fetchDashboardData();
+
+    await Future.delayed(Duration(seconds: 1)); // Simulating a delay
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -361,248 +370,239 @@ class _HomepagesState extends State<Homepages> {
               ),
             ),
           ),
-          body: Container(
-            decoration: BoxDecoration(color: Color(0xffF1F3FF)),
-            height: screenHeight,
-            width: screenWidth,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              child: ListView(
-                physics: BouncingScrollPhysics(),
-                children: [
-                  Row(
-                    children: [
-                      Obx(
-                        () => Text(
-                          languageController.tr("STATUS"),
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.045,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff8082ED),
-                            fontFamily: languagesController.selectedlan == "Fa"
-                                ? "Iranfont"
-                                : "Roboto",
+          body: RefreshIndicator(
+            color: Colors.white, // Change the progress indicator color
+            backgroundColor: Colors.white, // Change background color
+            onRefresh: bodyrefresh,
+
+            child: Container(
+              decoration: BoxDecoration(color: Color(0xffF1F3FF)),
+              height: screenHeight,
+              width: screenWidth,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: ListView(
+                  physics: BouncingScrollPhysics(),
+                  children: [
+                    Row(
+                      children: [
+                        Obx(
+                          () => Text(
+                            languageController.tr("STATUS"),
+                            style: TextStyle(
+                              fontSize: screenWidth * 0.045,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xff8082ED),
+                              fontFamily:
+                                  languagesController.selectedlan == "Fa"
+                                  ? "Iranfont"
+                                  : "Roboto",
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Container(
-                          height: 1,
-                          color: Colors.grey.shade300,
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Container(
+                            height: 1,
+                            color: Colors.grey.shade300,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    height: 140,
-                    width: screenWidth,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
+                      ],
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 10,
+                    SizedBox(height: 10),
+                    Container(
+                      height: 140,
+                      width: screenWidth,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 50,
-                            width: screenWidth,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: PageView(
-                              controller: _pageController,
-                              physics:
-                                  NeverScrollableScrollPhysics(), // Disable swipe
-                              children: [
-                                BalanceWidget(),
-                                SaleWidget(),
-                                DebitWidget(),
-                                ProfitWidget(),
-                                CommissionWidget(),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          Obx(
-                            () => Container(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 10,
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 50,
+                              width: screenWidth,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: PageView(
+                                controller: _pageController,
+                                physics:
+                                    NeverScrollableScrollPhysics(), // Disable swipe
                                 children: [
-                                  buildButton(
-                                    languageController.tr("BALANCE"),
-                                    0,
-                                  ),
-                                  buildButton(languageController.tr("SALE"), 1),
-                                  buildButton(
-                                    languageController.tr("DEBIT"),
-                                    2,
-                                  ),
-                                  buildButton(
-                                    languageController.tr("PROFIT"),
-                                    3,
-                                  ),
-                                  buildButton(
-                                    languageController.tr("COMISSION"),
-                                    4,
-                                  ),
+                                  BalanceWidget(),
+                                  SaleWidget(),
+                                  DebitWidget(),
+                                  ProfitWidget(),
+                                  CommissionWidget(),
                                 ],
                               ),
                             ),
+                            SizedBox(height: 20),
+                            Obx(
+                              () => Container(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    buildButton(
+                                      languageController.tr("BALANCE"),
+                                      0,
+                                    ),
+                                    buildButton(
+                                      languageController.tr("SALE"),
+                                      1,
+                                    ),
+                                    buildButton(
+                                      languageController.tr("DEBIT"),
+                                      2,
+                                    ),
+                                    buildButton(
+                                      languageController.tr("PROFIT"),
+                                      3,
+                                    ),
+                                    buildButton(
+                                      languageController.tr("COMISSION"),
+                                      4,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      height: 130,
+                      width: screenWidth,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Obx(() {
+                              if (dashboardController.isLoading.value) {
+                                return SizedBox(); // লোডিং হলে কিছু দেখাবে না
+                              }
+                              if (dashboardController
+                                          .alldashboardData
+                                          .value
+                                          .data!
+                                          .advertisementSliders ==
+                                      null ||
+                                  dashboardController
+                                      .alldashboardData
+                                      .value
+                                      .data!
+                                      .advertisementSliders!
+                                      .isEmpty) {
+                                return Container(
+                                  color: Colors.transparent,
+                                ); // যদি স্লাইডার না থাকে, তাহলে সাদা ব্যাকগ্রাউন্ড দেখাবে
+                              }
+                              return Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      dashboardController
+                                          .alldashboardData
+                                          .value
+                                          .data!
+                                          .advertisementSliders![currentIndex]
+                                          .adSliderImageUrl
+                                          .toString(),
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              );
+                            }),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    height: 130,
-                    width: screenWidth,
-                    child: Row(
+                    SizedBox(height: 10),
+                    Obx(
+                      () => CreditButton(
+                        buttonName: languagesController.tr("CREDIT_TRANSFER"),
+                        mycolor: Color(0xffFFFFFF),
+                        onpressed: () {
+                          mypagecontroller.changePage(
+                            CreditTransfer(),
+                            isMainPage: false,
+                          );
+
+                          print(box.read("afghanistan_id"));
+                          print(box.read("afghanistan_flag"));
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Row(
                       children: [
+                        Obx(
+                          () => Text(
+                            languageController.tr("SERVICES"),
+                            style: TextStyle(
+                              fontSize: screenWidth * 0.045,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xff8082ED),
+                              fontFamily:
+                                  languagesController.selectedlan == "Fa"
+                                  ? "Iranfont"
+                                  : "Roboto",
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
                         Expanded(
-                          child: Obx(() {
-                            if (dashboardController.isLoading.value) {
-                              return SizedBox(); // লোডিং হলে কিছু দেখাবে না
-                            }
-                            if (dashboardController
-                                        .alldashboardData
-                                        .value
-                                        .data!
-                                        .advertisementSliders ==
-                                    null ||
-                                dashboardController
-                                    .alldashboardData
-                                    .value
-                                    .data!
-                                    .advertisementSliders!
-                                    .isEmpty) {
-                              return Container(
-                                color: Colors.transparent,
-                              ); // যদি স্লাইডার না থাকে, তাহলে সাদা ব্যাকগ্রাউন্ড দেখাবে
-                            }
-                            return Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                    dashboardController
-                                        .alldashboardData
-                                        .value
-                                        .data!
-                                        .advertisementSliders![currentIndex]
-                                        .adSliderImageUrl
-                                        .toString(),
-                                  ),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            );
-                          }),
+                          child: Container(
+                            height: 1,
+                            color: Colors.grey.shade300,
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  Obx(
-                    () => CreditButton(
-                      buttonName: languagesController.tr("CREDIT_TRANSFER"),
-                      mycolor: Color(0xffFFFFFF),
-                      onpressed: () {
-                        mypagecontroller.changePage(
-                          CreditTransfer(),
-                          isMainPage: false,
-                        );
-
-                        print(box.read("afghanistan_id"));
-                        print(box.read("afghanistan_flag"));
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Row(
-                    children: [
-                      Obx(
-                        () => Text(
-                          languageController.tr("SERVICES"),
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.045,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff8082ED),
-                            fontFamily: languagesController.selectedlan == "Fa"
-                                ? "Iranfont"
-                                : "Roboto",
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Container(
-                          height: 1,
-                          color: Colors.grey.shade300,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 5),
-                  Obx(
-                    () => categorisListController.isLoading.value == false
-                        ? GridView.builder(
-                            shrinkWrap: true,
-                            physics: BouncingScrollPhysics(),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount:
-                                      2, // Number of columns in the grid
-                                  crossAxisSpacing:
-                                      8.0, // Spacing between columns
-                                  mainAxisSpacing: 8.0, // Spacing between rows
-                                  childAspectRatio: 2.8,
-                                ),
-                            itemCount: categorisListController
-                                .allcategorieslist
-                                .value
-                                .data!
-                                .servicecategories!
-                                .length,
-                            itemBuilder: (context, index) {
-                              final data = categorisListController
+                    SizedBox(height: 5),
+                    Obx(
+                      () => categorisListController.isLoading.value == false
+                          ? GridView.builder(
+                              shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount:
+                                        2, // Number of columns in the grid
+                                    crossAxisSpacing:
+                                        8.0, // Spacing between columns
+                                    mainAxisSpacing:
+                                        8.0, // Spacing between rows
+                                    childAspectRatio: 2.8,
+                                  ),
+                              itemCount: categorisListController
                                   .allcategorieslist
                                   .value
                                   .data!
-                                  .servicecategories![index];
+                                  .servicecategories!
+                                  .length,
+                              itemBuilder: (context, index) {
+                                final data = categorisListController
+                                    .allcategorieslist
+                                    .value
+                                    .data!
+                                    .servicecategories![index];
 
-                              final imagePath =
-                                  serviceimages[index % serviceimages.length];
-                              return GestureDetector(
-                                onTap: () {
-                                  box.write(
-                                    "service_category_id",
-                                    categorisListController
-                                        .allcategorieslist
-                                        .value
-                                        .data!
-                                        .servicecategories![index]
-                                        .id,
-                                  );
-
-                                  if (data.type.toString() == "nonsocial") {
-                                    mypagecontroller.changePage(
-                                      InternetPack(),
-                                      isMainPage: false,
-                                    );
-                                    countrylistController.fetchCountryData();
-                                  } else {
-                                    box.write("validity_type", "");
-
-                                    box.write("search_tag", "");
+                                final imagePath =
+                                    serviceimages[index % serviceimages.length];
+                                return GestureDetector(
+                                  onTap: () {
                                     box.write(
                                       "service_category_id",
                                       categorisListController
@@ -613,53 +613,75 @@ class _HomepagesState extends State<Homepages> {
                                           .id,
                                     );
 
-                                    box.write("country_id", "");
-                                    box.write("company_id", "");
-                                    bundleController.finalList.clear();
-                                    bundleController.initialpage = 1;
+                                    if (data.type.toString() == "nonsocial") {
+                                      mypagecontroller.changePage(
+                                        InternetPack(),
+                                        isMainPage: false,
+                                      );
+                                      countrylistController.fetchCountryData();
+                                    } else {
+                                      box.write("validity_type", "");
 
-                                    mypagecontroller.changePage(
-                                      SocialBundles(),
-                                      isMainPage: false,
-                                    );
-                                  }
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Image.asset(
-                                        imagePath,
-                                        height: screenHeight * 0.045,
-                                      ),
-                                      Text(
-                                        data.categoryName.toString(),
-                                        style: TextStyle(
-                                          color: Color(0xff454F5B),
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: screenWidth * 0.030,
-                                          fontFamily:
-                                              languagesController.selectedlan ==
-                                                  "Fa"
-                                              ? "Iranfont"
-                                              : "Roboto",
+                                      box.write("search_tag", "");
+                                      box.write(
+                                        "service_category_id",
+                                        categorisListController
+                                            .allcategorieslist
+                                            .value
+                                            .data!
+                                            .servicecategories![index]
+                                            .id,
+                                      );
+
+                                      box.write("country_id", "");
+                                      box.write("company_id", "");
+                                      bundleController.finalList.clear();
+                                      bundleController.initialpage = 1;
+
+                                      mypagecontroller.changePage(
+                                        SocialBundles(),
+                                        isMainPage: false,
+                                      );
+                                    }
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Image.asset(
+                                          imagePath,
+                                          height: screenHeight * 0.045,
                                         ),
-                                      ),
-                                    ],
+                                        Text(
+                                          data.categoryName.toString(),
+                                          style: TextStyle(
+                                            color: Color(0xff454F5B),
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: screenWidth * 0.030,
+                                            fontFamily:
+                                                languagesController
+                                                        .selectedlan ==
+                                                    "Fa"
+                                                ? "Iranfont"
+                                                : "Roboto",
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                          )
-                        : Center(child: CircularProgressIndicator()),
-                  ),
-                  SizedBox(height: 80),
-                ],
+                                );
+                              },
+                            )
+                          : Center(child: CircularProgressIndicator()),
+                    ),
+                    SizedBox(height: 80),
+                  ],
+                ),
               ),
             ),
           ),

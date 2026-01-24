@@ -60,6 +60,7 @@ class ConfirmPinController extends GetxController {
       Map body = {
         'bundle_id': box.read("bundleID"),
         'rechargeble_account': numberController.text,
+        'pin': pinController.text,
       };
 
       http.Response response = await http.post(
@@ -71,6 +72,8 @@ class ConfirmPinController extends GetxController {
           'Authorization': 'Bearer ${box.read("userToken")}',
         },
       );
+      print("checkurl" + url.toString());
+      print(body.toString());
 
       final orderResults = jsonDecode(response.body);
       if (response.statusCode == 201 && orderResults["success"] == true) {

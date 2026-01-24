@@ -6,21 +6,21 @@ import '../utils/api_endpoints.dart';
 
 class TransactionApi {
   final box = GetStorage();
-  Future<TransactionModel> fetchTransaction() async {
+  Future<TransactionModel> fetchTransaction(int pageNo) async {
     final url = Uri.parse(
-        ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.transactions);
+      "${ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.transactions}?page=${pageNo}",
+    );
 
     var response = await http.get(
       url,
-      headers: {
-        'Authorization': 'Bearer ${box.read("userToken")}',
-      },
+      headers: {'Authorization': 'Bearer ${box.read("userToken")}'},
     );
 
     if (response.statusCode == 200) {
       // print(response.body.toString());
-      final transactionModel =
-          TransactionModel.fromJson(json.decode(response.body));
+      final transactionModel = TransactionModel.fromJson(
+        json.decode(response.body),
+      );
 
       return transactionModel;
     } else {

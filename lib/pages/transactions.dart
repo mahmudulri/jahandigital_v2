@@ -40,10 +40,51 @@ class _TransactionsState extends State<Transactions> {
 
   final Mypagecontroller mypagecontroller = Get.find();
 
+  final ScrollController scrollController = ScrollController();
+
+  Future<void> refresh() async {
+    final int totalPages =
+        transactionController
+            .alltransactionlist
+            .value
+            .payload
+            ?.pagination!
+            .lastPage ??
+        0;
+    final int currentPage = transactionController.initialpage;
+
+    // Prevent loading more pages if we've reached the last page
+    if (currentPage >= totalPages) {
+      print(
+        "End..........................................End.....................",
+      );
+      return;
+    }
+
+    // Check if the scroll position is at the bottom
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
+      transactionController.initialpage++;
+
+      // Prevent fetching if the next page exceeds total pages
+      if (transactionController.initialpage <= totalPages) {
+        print("Load More...................");
+        transactionController.fetchTransactionData();
+      } else {
+        transactionController.initialpage =
+            totalPages; // Reset to the last valid page
+        print("Already on the last page");
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    transactionController.initialpage = 1;
+    transactionController.finalList.clear();
     transactionController.fetchTransactionData();
+    scrollController.addListener(refresh);
   }
 
   @override
@@ -120,306 +161,297 @@ class _TransactionsState extends State<Transactions> {
         width: screenWidth,
         child: Padding(
           padding: EdgeInsets.all(8.0),
-          child: ListView(
-            physics: BouncingScrollPhysics(),
+          child: Column(
             children: [
-              SizedBox(height: 10),
-              Container(
-                width: screenWidth,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 2,
-                      blurRadius: 2,
-                      offset: Offset(0, 0),
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 12,
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            width: 1,
-                            color: Colors.grey.shade300,
+              Obx(
+                () => transactionController.isLoading.value == true
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(
+                            color: AppColors.primaryColor,
                           ),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              icon: Icon(
-                                FontAwesomeIcons.chevronDown,
-                                color: Colors.grey,
-                              ),
-                              isDense: true,
-                              value: defaultValue,
-                              isExpanded: true,
-                              items: [
-                                DropdownMenuItem(
-                                  value: "",
-                                  child: Obx(
-                                    () => Text(
-                                      languagesController.tr("ALL"),
-                                      style: TextStyle(
-                                        fontSize: screenWidth * 0.040,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                ...orderStatus.map<DropdownMenuItem<String>>((
-                                  data,
-                                ) {
-                                  return DropdownMenuItem(
-                                    value: data['value'],
-                                    child: Text(data['title']),
-                                  );
-                                }).toList(),
-                              ],
-                              onChanged: (value) {
-                                // box.write("orderstatus", value);
-                                // print(
-                                //     "selected Value $value");
-                                setState(() {
-                                  defaultValue = value!;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            width: 1,
-                            color: Colors.grey.shade300,
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Obx(
-                                () => Text(
-                                  languagesController.tr("DATE"),
-                                  style: TextStyle(
-                                    fontSize: screenWidth * 0.040,
-                                  ),
-                                ),
-                              ),
-                              Icon(Icons.calendar_month, color: Colors.grey),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            width: 1,
-                            color: Colors.grey.shade300,
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Icon(
-                                Icons.search_sharp,
-                                color: Colors.grey,
-                                size: screenHeight * 0.040,
-                              ),
-                              SizedBox(width: 10),
-                              Expanded(
-                                child: Obx(
-                                  () => TextField(
-                                    decoration: InputDecoration(
-                                      hintText: languagesController.tr(
-                                        "SEARCH_BY_PHOENUMBER",
-                                      ),
-                                      border: InputBorder.none,
-                                      hintStyle: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: screenWidth * 0.040,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Obx(
-                        () => Container(
-                          height: 45,
-                          width: screenWidth,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 5,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryColor,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      languagesController.tr("APPLY_FILTER"),
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: screenWidth * 0.035,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              Expanded(
-                                flex: 4,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      languagesController.tr("REMOVE_FILTER"),
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: screenWidth * 0.035,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                        ],
+                      )
+                    : SizedBox(),
               ),
-              SizedBox(height: 10),
-              Container(
-                height: 400,
-                // color: Colors.cyan,
-                child: Obx(
-                  () => transactionController.isLoading.value == false
-                      ? ListView.separated(
-                          separatorBuilder: (context, index) {
-                            return SizedBox(height: 5);
-                          },
-                          physics: BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: transactionController
-                              .alltransactionlist
-                              .value
-                              .data!
-                              .resellerBalanceTransactions
-                              .length,
-                          itemBuilder: (context, index) {
-                            final data = transactionController
+              Obx(
+                () => transactionController.isLoading.value == false
+                    ? Container(
+                        child:
+                            transactionController
                                 .alltransactionlist
                                 .value
                                 .data!
-                                .resellerBalanceTransactions[index];
-                            return Container(
-                              height: 120,
-                              width: screenWidth,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  width: 1,
-                                  color: data.status.toString() == "debit"
-                                      ? Colors.red.withOpacity(0.4)
-                                      : Colors.green.withOpacity(0.4),
+                                .resellerBalanceTransactions
+                                .isNotEmpty
+                            ? SizedBox()
+                            : Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      "assets/icons/empty.png",
+                                      height: 80,
+                                    ),
+                                    Text("No Data found", style: TextStyle()),
+                                  ],
                                 ),
                               ),
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: data.status.toString() == "debit"
-                                            ? Colors.red.withOpacity(0.12)
-                                            : Colors.green.withOpacity(0.12),
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          topLeft: Radius.circular(10),
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              data.reseller!.resellerName
-                                                  .toString(),
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: screenHeight * 0.020,
-                                              ),
-                                            ),
-                                            Text(
-                                              DateFormat("dd-MM-yyyy").format(
-                                                DateTime.parse(
-                                                  data.createdAt.toString(),
-                                                ),
-                                              ),
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: screenHeight * 0.020,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                      )
+                    : SizedBox(),
+              ),
+              SizedBox(height: 10),
+              // Container(
+              //   width: screenWidth,
+              //   decoration: BoxDecoration(
+              //     color: Colors.white,
+              //     boxShadow: [
+              //       BoxShadow(
+              //         color: Colors.grey.withOpacity(0.2),
+              //         spreadRadius: 2,
+              //         blurRadius: 2,
+              //         offset: Offset(0, 0),
+              //       ),
+              //     ],
+              //     borderRadius: BorderRadius.circular(8),
+              //   ),
+              //   child: Padding(
+              //     padding: const EdgeInsets.symmetric(
+              //       horizontal: 8,
+              //       vertical: 12,
+              //     ),
+              //     child: Column(
+              //       children: [
+              //         Container(
+              //           height: 50,
+              //           decoration: BoxDecoration(
+              //             borderRadius: BorderRadius.circular(8),
+              //             border: Border.all(
+              //               width: 1,
+              //               color: Colors.grey.shade300,
+              //             ),
+              //           ),
+              //           child: Padding(
+              //             padding: EdgeInsets.symmetric(horizontal: 8),
+              //             child: DropdownButtonHideUnderline(
+              //               child: DropdownButton<String>(
+              //                 icon: Icon(
+              //                   FontAwesomeIcons.chevronDown,
+              //                   color: Colors.grey,
+              //                 ),
+              //                 isDense: true,
+              //                 value: defaultValue,
+              //                 isExpanded: true,
+              //                 items: [
+              //                   DropdownMenuItem(
+              //                     value: "",
+              //                     child: Obx(
+              //                       () => Text(
+              //                         languagesController.tr("ALL"),
+              //                         style: TextStyle(
+              //                           fontSize: screenWidth * 0.040,
+              //                         ),
+              //                       ),
+              //                     ),
+              //                   ),
+              //                   ...orderStatus.map<DropdownMenuItem<String>>((
+              //                     data,
+              //                   ) {
+              //                     return DropdownMenuItem(
+              //                       value: data['value'],
+              //                       child: Text(data['title']),
+              //                     );
+              //                   }).toList(),
+              //                 ],
+              //                 onChanged: (value) {
+              //                   // box.write("orderstatus", value);
+              //                   // print(
+              //                   //     "selected Value $value");
+              //                   setState(() {
+              //                     defaultValue = value!;
+              //                   });
+              //                 },
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //         SizedBox(height: 10),
+              //         Container(
+              //           height: 50,
+              //           decoration: BoxDecoration(
+              //             borderRadius: BorderRadius.circular(8),
+              //             border: Border.all(
+              //               width: 1,
+              //               color: Colors.grey.shade300,
+              //             ),
+              //           ),
+              //           child: Padding(
+              //             padding: const EdgeInsets.symmetric(horizontal: 10),
+              //             child: Row(
+              //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //               children: [
+              //                 Obx(
+              //                   () => Text(
+              //                     languagesController.tr("DATE"),
+              //                     style: TextStyle(
+              //                       fontSize: screenWidth * 0.040,
+              //                     ),
+              //                   ),
+              //                 ),
+              //                 Icon(Icons.calendar_month, color: Colors.grey),
+              //               ],
+              //             ),
+              //           ),
+              //         ),
+              //         SizedBox(height: 10),
+              //         Container(
+              //           height: 50,
+              //           decoration: BoxDecoration(
+              //             borderRadius: BorderRadius.circular(8),
+              //             border: Border.all(
+              //               width: 1,
+              //               color: Colors.grey.shade300,
+              //             ),
+              //           ),
+              //           child: Padding(
+              //             padding: const EdgeInsets.symmetric(horizontal: 10),
+              //             child: Row(
+              //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //               children: [
+              //                 Icon(
+              //                   Icons.search_sharp,
+              //                   color: Colors.grey,
+              //                   size: screenHeight * 0.040,
+              //                 ),
+              //                 SizedBox(width: 10),
+              //                 Expanded(
+              //                   child: Obx(
+              //                     () => TextField(
+              //                       decoration: InputDecoration(
+              //                         hintText: languagesController.tr(
+              //                           "SEARCH_BY_PHOENUMBER",
+              //                         ),
+              //                         border: InputBorder.none,
+              //                         hintStyle: TextStyle(
+              //                           color: Colors.grey,
+              //                           fontSize: screenWidth * 0.040,
+              //                         ),
+              //                       ),
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ],
+              //             ),
+              //           ),
+              //         ),
+              //         SizedBox(height: 10),
+              //         Obx(
+              //           () => Container(
+              //             height: 45,
+              //             width: screenWidth,
+              //             child: Row(
+              //               children: [
+              //                 Expanded(
+              //                   flex: 5,
+              //                   child: Container(
+              //                     decoration: BoxDecoration(
+              //                       color: AppColors.primaryColor,
+              //                       borderRadius: BorderRadius.circular(10),
+              //                     ),
+              //                     child: Center(
+              //                       child: Text(
+              //                         languagesController.tr("APPLY_FILTER"),
+              //                         style: TextStyle(
+              //                           color: Colors.white,
+              //                           fontWeight: FontWeight.w600,
+              //                           fontSize: screenWidth * 0.035,
+              //                         ),
+              //                       ),
+              //                     ),
+              //                   ),
+              //                 ),
+              //                 SizedBox(width: 10),
+              //                 Expanded(
+              //                   flex: 4,
+              //                   child: Container(
+              //                     decoration: BoxDecoration(
+              //                       color: Colors.red,
+              //                       borderRadius: BorderRadius.circular(10),
+              //                     ),
+              //                     child: Center(
+              //                       child: Text(
+              //                         languagesController.tr("REMOVE_FILTER"),
+              //                         style: TextStyle(
+              //                           color: Colors.white,
+              //                           fontWeight: FontWeight.w600,
+              //                           fontSize: screenWidth * 0.035,
+              //                         ),
+              //                       ),
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ],
+              //             ),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(height: 10),
+              Expanded(
+                child: Container(
+                  // color: Colors.cyan,
+                  child: Obx(
+                    () =>
+                        transactionController.isLoading.value == false &&
+                            transactionController.finalList.isNotEmpty
+                        ? RefreshIndicator(
+                            onRefresh: refresh,
+                            child: ListView.separated(
+                              shrinkWrap: false,
+                              controller: scrollController,
+                              physics: AlwaysScrollableScrollPhysics(),
+                              itemCount: transactionController.finalList.length,
+                              separatorBuilder: (context, index) {
+                                return SizedBox(height: 5);
+                              },
+
+                              itemBuilder: (context, index) {
+                                final data =
+                                    transactionController.finalList[index];
+                                return Container(
+                                  height: 120,
+                                  width: screenWidth,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      width: 1,
+                                      color: data.status.toString() == "debit"
+                                          ? Colors.red.withOpacity(0.4)
+                                          : Colors.green.withOpacity(0.4),
                                     ),
                                   ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.only(
-                                          bottomLeft: Radius.circular(10),
-                                          bottomRight: Radius.circular(10),
-                                        ),
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Padding(
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color:
+                                                data.status.toString() ==
+                                                    "debit"
+                                                ? Colors.red.withOpacity(0.12)
+                                                : Colors.green.withOpacity(
+                                                    0.12,
+                                                  ),
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(10),
+                                              topLeft: Radius.circular(10),
+                                            ),
+                                          ),
+                                          child: Padding(
                                             padding: const EdgeInsets.symmetric(
                                               horizontal: 10,
                                             ),
@@ -429,72 +461,268 @@ class _TransactionsState extends State<Transactions> {
                                                       .spaceBetween,
                                               children: [
                                                 Text(
-                                                  languagesController.tr(
-                                                    "TRANSACTION_TYPE",
-                                                  ),
+                                                  data.reseller!.resellerName
+                                                      .toString(),
                                                   style: TextStyle(
-                                                    color: Colors.grey.shade700,
+                                                    color: Colors.black,
                                                     fontWeight: FontWeight.w400,
                                                     fontSize:
                                                         screenHeight * 0.020,
                                                   ),
                                                 ),
-                                                Obx(
-                                                  () => Container(
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          data.status
-                                                                  .toString() ==
-                                                              "debit"
-                                                          ? Colors.red
-                                                                .withOpacity(
-                                                                  0.12,
-                                                                )
-                                                          : Colors.green
-                                                                .withOpacity(
-                                                                  0.12,
-                                                                ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            6,
-                                                          ),
+                                                Text(
+                                                  DateFormat(
+                                                    "dd-MM-yyyy",
+                                                  ).format(
+                                                    DateTime.parse(
+                                                      data.createdAt.toString(),
                                                     ),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.symmetric(
-                                                            horizontal: 10,
-                                                            vertical: 6,
-                                                          ),
-                                                      child: Text(
-                                                        data.status
-                                                                    .toString() ==
-                                                                "debit"
-                                                            ? languagesController
-                                                                  .tr("DEBIT")
-                                                            : languagesController
-                                                                  .tr("CREDIT"),
-                                                        style: TextStyle(
+                                                  ),
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize:
+                                                        screenHeight * 0.020,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(10),
+                                              bottomRight: Radius.circular(10),
+                                            ),
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                    ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      languagesController.tr(
+                                                        "TRANSACTION_TYPE",
+                                                      ),
+                                                      style: TextStyle(
+                                                        color: Colors
+                                                            .grey
+                                                            .shade700,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontSize:
+                                                            screenHeight *
+                                                            0.020,
+                                                      ),
+                                                    ),
+                                                    Obx(
+                                                      () => Container(
+                                                        decoration: BoxDecoration(
                                                           color:
                                                               data.status
                                                                       .toString() ==
                                                                   "debit"
                                                               ? Colors.red
-                                                              : Colors.green,
+                                                                    .withOpacity(
+                                                                      0.12,
+                                                                    )
+                                                              : Colors.green
+                                                                    .withOpacity(
+                                                                      0.12,
+                                                                    ),
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                6,
+                                                              ),
+                                                        ),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                horizontal: 10,
+                                                                vertical: 6,
+                                                              ),
+                                                          child: Text(
+                                                            data.status
+                                                                        .toString() ==
+                                                                    "debit"
+                                                                ? languagesController
+                                                                      .tr(
+                                                                        "DEBIT",
+                                                                      )
+                                                                : languagesController
+                                                                      .tr(
+                                                                        "CREDIT",
+                                                                      ),
+                                                            style: TextStyle(
+                                                              color:
+                                                                  data.status
+                                                                          .toString() ==
+                                                                      "debit"
+                                                                  ? Colors.red
+                                                                  : Colors
+                                                                        .green,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize:
+                                                                  screenHeight *
+                                                                  0.020,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                    ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Obx(
+                                                      () => Text(
+                                                        languagesController.tr(
+                                                          "AMOUNT",
+                                                        ),
+                                                        style: TextStyle(
+                                                          color: Colors
+                                                              .grey
+                                                              .shade700,
                                                           fontWeight:
-                                                              FontWeight.bold,
+                                                              FontWeight.w400,
                                                           fontSize:
                                                               screenHeight *
                                                               0.020,
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          NumberFormat.currency(
+                                                            locale: 'en_US',
+                                                            symbol: '',
+                                                            decimalDigits: 2,
+                                                          ).format(
+                                                            double.parse(
+                                                              data.amount
+                                                                  .toString(),
+                                                            ),
+                                                          ),
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                screenHeight *
+                                                                0.015,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            color:
+                                                                data.status
+                                                                        .toString() ==
+                                                                    "debit"
+                                                                ? Colors.black
+                                                                : Colors.black,
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 5),
+                                                        Text(
+                                                          "${box.read("currency_code")} ",
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                screenHeight *
+                                                                0.015,
+                                                            color:
+                                                                data.status
+                                                                        .toString() ==
+                                                                    "debit"
+                                                                ? Colors.black
+                                                                : Colors.black,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        : transactionController.finalList.isEmpty
+                        ? SizedBox()
+                        : RefreshIndicator(
+                            onRefresh: refresh,
+                            child: ListView.separated(
+                              shrinkWrap: false,
+                              controller: scrollController,
+                              physics: AlwaysScrollableScrollPhysics(),
+                              itemCount: transactionController.finalList.length,
+                              separatorBuilder: (context, index) {
+                                return SizedBox(height: 5);
+                              },
+
+                              itemBuilder: (context, index) {
+                                final data =
+                                    transactionController.finalList[index];
+                                return Container(
+                                  height: 120,
+                                  width: screenWidth,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      width: 1,
+                                      color: data.status.toString() == "debit"
+                                          ? Colors.red.withOpacity(0.4)
+                                          : Colors.green.withOpacity(0.4),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color:
+                                                data.status.toString() ==
+                                                    "debit"
+                                                ? Colors.red.withOpacity(0.12)
+                                                : Colors.green.withOpacity(
+                                                    0.12,
+                                                  ),
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(10),
+                                              topLeft: Radius.circular(10),
                                             ),
                                           ),
-                                          SizedBox(height: 8),
-                                          Padding(
+                                          child: Padding(
                                             padding: const EdgeInsets.symmetric(
                                               horizontal: 10,
                                             ),
@@ -503,80 +731,223 @@ class _TransactionsState extends State<Transactions> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Obx(
-                                                  () => Text(
-                                                    languagesController.tr(
-                                                      "AMOUNT",
-                                                    ),
-                                                    style: TextStyle(
-                                                      color:
-                                                          Colors.grey.shade700,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize:
-                                                          screenHeight * 0.020,
-                                                    ),
+                                                Text(
+                                                  data.reseller!.resellerName
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize:
+                                                        screenHeight * 0.020,
                                                   ),
                                                 ),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      NumberFormat.currency(
-                                                        locale: 'en_US',
-                                                        symbol: '',
-                                                        decimalDigits: 2,
-                                                      ).format(
-                                                        double.parse(
-                                                          data.amount
-                                                              .toString(),
-                                                        ),
-                                                      ),
-                                                      style: TextStyle(
-                                                        fontSize:
-                                                            screenHeight *
-                                                            0.015,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color:
-                                                            data.status
-                                                                    .toString() ==
-                                                                "debit"
-                                                            ? Colors.black
-                                                            : Colors.black,
-                                                      ),
+                                                Text(
+                                                  DateFormat(
+                                                    "dd-MM-yyyy",
+                                                  ).format(
+                                                    DateTime.parse(
+                                                      data.createdAt.toString(),
                                                     ),
-                                                    SizedBox(width: 5),
-                                                    Text(
-                                                      "${box.read("currency_code")} ",
-                                                      style: TextStyle(
-                                                        fontSize:
-                                                            screenHeight *
-                                                            0.015,
-                                                        color:
-                                                            data.status
-                                                                    .toString() ==
-                                                                "debit"
-                                                            ? Colors.black
-                                                            : Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                  ],
+                                                  ),
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize:
+                                                        screenHeight * 0.020,
+                                                  ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(10),
+                                              bottomRight: Radius.circular(10),
+                                            ),
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                    ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      languagesController.tr(
+                                                        "TRANSACTION_TYPE",
+                                                      ),
+                                                      style: TextStyle(
+                                                        color: Colors
+                                                            .grey
+                                                            .shade700,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontSize:
+                                                            screenHeight *
+                                                            0.020,
+                                                      ),
+                                                    ),
+                                                    Obx(
+                                                      () => Container(
+                                                        decoration: BoxDecoration(
+                                                          color:
+                                                              data.status
+                                                                      .toString() ==
+                                                                  "debit"
+                                                              ? Colors.red
+                                                                    .withOpacity(
+                                                                      0.12,
+                                                                    )
+                                                              : Colors.green
+                                                                    .withOpacity(
+                                                                      0.12,
+                                                                    ),
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                6,
+                                                              ),
+                                                        ),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                horizontal: 10,
+                                                                vertical: 6,
+                                                              ),
+                                                          child: Text(
+                                                            data.status
+                                                                        .toString() ==
+                                                                    "debit"
+                                                                ? languagesController
+                                                                      .tr(
+                                                                        "DEBIT",
+                                                                      )
+                                                                : languagesController
+                                                                      .tr(
+                                                                        "CREDIT",
+                                                                      ),
+                                                            style: TextStyle(
+                                                              color:
+                                                                  data.status
+                                                                          .toString() ==
+                                                                      "debit"
+                                                                  ? Colors.red
+                                                                  : Colors
+                                                                        .green,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize:
+                                                                  screenHeight *
+                                                                  0.020,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                    ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Obx(
+                                                      () => Text(
+                                                        languagesController.tr(
+                                                          "AMOUNT",
+                                                        ),
+                                                        style: TextStyle(
+                                                          color: Colors
+                                                              .grey
+                                                              .shade700,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize:
+                                                              screenHeight *
+                                                              0.020,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          NumberFormat.currency(
+                                                            locale: 'en_US',
+                                                            symbol: '',
+                                                            decimalDigits: 2,
+                                                          ).format(
+                                                            double.parse(
+                                                              data.amount
+                                                                  .toString(),
+                                                            ),
+                                                          ),
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                screenHeight *
+                                                                0.015,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            color:
+                                                                data.status
+                                                                        .toString() ==
+                                                                    "debit"
+                                                                ? Colors.black
+                                                                : Colors.black,
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 5),
+                                                        Text(
+                                                          "${box.read("currency_code")} ",
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                screenHeight *
+                                                                0.015,
+                                                            color:
+                                                                data.status
+                                                                        .toString() ==
+                                                                    "debit"
+                                                                ? Colors.black
+                                                                : Colors.black,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            );
-                          },
-                        )
-                      : Center(child: CircularProgressIndicator()),
+                                );
+                              },
+                            ),
+                          ),
+                  ),
                 ),
               ),
               SizedBox(height: 10),

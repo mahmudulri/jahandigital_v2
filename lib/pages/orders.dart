@@ -1735,8 +1735,10 @@ class _DetailsDialogState extends State<DetailsDialog> {
                                                 fontSize: 15,
                                               ),
                                             ),
-                                            convertToDate(
-                                              widget.date.toString(),
+                                            Text(
+                                              convertToDate(
+                                                widget.date.toString(),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -1751,8 +1753,10 @@ class _DetailsDialogState extends State<DetailsDialog> {
                                                 fontSize: 15,
                                               ),
                                             ),
-                                            convertToLocalTime(
-                                              widget.date.toString(),
+                                            Text(
+                                              convertToLocalTime(
+                                                widget.date.toString(),
+                                              ),
                                             ),
                                           ],
                                         ),
