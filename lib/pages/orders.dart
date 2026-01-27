@@ -100,8 +100,8 @@ class _OrdersState extends State<Orders> {
   MyDrawerController drawerController = Get.put(MyDrawerController());
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    print("hello order............");
     languagesController = Get.put(LanguagesController());
 
     orderStatus = [
@@ -423,7 +423,11 @@ class _OrdersState extends State<Orders> {
                                                   "assets/icons/empty.png",
                                                   height: 80,
                                                 ),
-                                                Text("No Data found"),
+                                                Text(
+                                                  languagesController.tr(
+                                                    "NO_DATA_FOUND",
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ),

@@ -43,7 +43,7 @@ class _CreateTransferScreenState extends State<CreateTransferScreen> {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
 
-    LanguagesController languagesController = Get.put(LanguagesController());
+    final languagesController = Get.find<LanguagesController>();
     final Mypagecontroller mypagecontroller = Get.find();
 
     return Scaffold(
@@ -65,7 +65,7 @@ class _CreateTransferScreenState extends State<CreateTransferScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.goBack();
+                          mypagecontroller.handleBack();
                         },
                         child: Container(
                           height: 45,

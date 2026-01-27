@@ -34,4 +34,6 @@ class OtherendPoints {
   final String paymenttypes = "payment-types";
   final String hawalacurrency = "hawala-currency";
   final String earningtransfer = "earning-transfer";
+  final String appsetting = "app-setting";
+  final String rechargeconfig = "get-afg-custom-recharge-config";
 }

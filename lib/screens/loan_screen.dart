@@ -23,7 +23,7 @@ class RequestLoanScreen extends StatefulWidget {
 
 final Mypagecontroller mypagecontroller = Get.find();
 
-LanguagesController languagesController = Get.put(LanguagesController());
+final languagesController = Get.find<LanguagesController>();
 
 class _RequestLoanScreenState extends State<RequestLoanScreen> {
   List orderStatus = [];
@@ -69,7 +69,7 @@ class _RequestLoanScreenState extends State<RequestLoanScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.goBack();
+                          mypagecontroller.handleBack();
                         },
                         child: Container(
                           height: 45,

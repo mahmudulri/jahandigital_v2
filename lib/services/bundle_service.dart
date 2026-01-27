@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:jahandigital/models/bundle_model.dart';
@@ -25,8 +26,18 @@ class BundlesApi {
       final bundleModel = BundleModel.fromJson(json.decode(response.body));
 
       return bundleModel;
-    } else {
-      throw Exception('Failed to fetch gateway');
     }
+    final decodedBody = json.decode(response.body);
+    if (response.statusCode == 403) {
+      Fluttertoast.showToast(
+        msg: decodedBody['message'],
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+      );
+      throw Exception(decodedBody['message'] ?? 'Your account is deactivated');
+    }
+
+    // 🔴 Handle all other errors
+    throw Exception(decodedBody['message'] ?? 'Failed to fetch hawala list');
   }
 }

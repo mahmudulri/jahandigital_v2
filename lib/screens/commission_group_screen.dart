@@ -20,7 +20,7 @@ class CommissionGroupScreen extends StatefulWidget {
 class _CommissionGroupScreenState extends State<CommissionGroupScreen> {
   final box = GetStorage();
 
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
 
   final commissionlistController = Get.find<CommissionGroupController>();
 
@@ -44,9 +44,7 @@ class _CommissionGroupScreenState extends State<CommissionGroupScreen> {
         elevation: 0.0,
         shadowColor: Colors.transparent,
         flexibleSpace: Container(
-          decoration: BoxDecoration(
-            color: Color(0xffF1F3FF),
-          ),
+          decoration: BoxDecoration(color: Color(0xffF1F3FF)),
           child: SafeArea(
             child: Padding(
               padding: EdgeInsets.only(left: 15, right: 15, top: 5),
@@ -57,7 +55,7 @@ class _CommissionGroupScreenState extends State<CommissionGroupScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.goBack();
+                          mypagecontroller.handleBack();
                         },
                         child: Container(
                           height: 45,
@@ -70,9 +68,7 @@ class _CommissionGroupScreenState extends State<CommissionGroupScreen> {
                             ),
                           ),
                           child: Center(
-                            child: Icon(
-                              FontAwesomeIcons.chevronLeft,
-                            ),
+                            child: Icon(FontAwesomeIcons.chevronLeft),
                           ),
                         ),
                       ),
@@ -142,9 +138,7 @@ class _CommissionGroupScreenState extends State<CommissionGroupScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
+                    SizedBox(width: 10),
                     Expanded(
                       flex: 4,
                       child: GestureDetector(
@@ -158,8 +152,9 @@ class _CommissionGroupScreenState extends State<CommissionGroupScreen> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 content: ClipRRect(
-                                    borderRadius: BorderRadius.circular(30),
-                                    child: CreateGroupBox()),
+                                  borderRadius: BorderRadius.circular(30),
+                                  child: CreateGroupBox(),
+                                ),
                               );
                             },
                           );
@@ -185,91 +180,86 @@ class _CommissionGroupScreenState extends State<CommissionGroupScreen> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 10),
               Expanded(
-                child: Obx(
-                  () => commissionlistController.isLoading.value == false
-                      ? ListView.separated(
-                          physics: BouncingScrollPhysics(),
-                          separatorBuilder: (context, index) {
-                            return SizedBox(
-                              height: 5,
-                            );
-                          },
-                          itemCount: commissionlistController
-                              .allgrouplist.value.data!.groups!.length,
-                          itemBuilder: (context, index) {
-                            final data = commissionlistController
-                                .allgrouplist.value.data!.groups![index];
-                            return Container(
-                              width: screenWidth,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 8),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          languagesController.tr("GROUP_NAME"),
-                                          style: TextStyle(),
-                                        ),
-                                        Text(
-                                          data.groupName.toString(),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          languagesController.tr("AMOUNT"),
-                                          style: TextStyle(),
-                                        ),
-                                        Text(
-                                          data.amount.toString(),
-                                          style: TextStyle(),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          languagesController
-                                              .tr("COMMISSION_TYPE"),
-                                          style: TextStyle(),
-                                        ),
-                                        Text(
-                                          data.commissionType.toString() ==
-                                                  "percentage"
-                                              ? languagesController
-                                                  .tr("PERCENTAGE")
-                                              : "",
-                                          style: TextStyle(),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        )
-                      : Center(
-                          child: CircularProgressIndicator(),
+                child: Obx(() {
+                  if (commissionlistController.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  final groups =
+                      commissionlistController.allgrouplist.value.data?.groups;
+
+                  if (groups == null || groups.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset("assets/icons/empty.png", height: 80),
+                          Text(languagesController.tr("NO_DATA_FOUND")),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return ListView.separated(
+                    physics: const BouncingScrollPhysics(),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 5),
+                    itemCount: groups.length,
+                    itemBuilder: (context, index) {
+                      final data = groups[index];
+
+                      return Container(
+                        width: screenWidth,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(languagesController.tr("GROUP_NAME")),
+                                  Text(data.groupName.toString()),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(languagesController.tr("AMOUNT")),
+                                  Text(data.amount.toString()),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    languagesController.tr("COMMISSION_TYPE"),
+                                  ),
+                                  Text(
+                                    data.commissionType == "percentage"
+                                        ? languagesController.tr("PERCENTAGE")
+                                        : "",
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }),
               ),
             ],
           ),
@@ -289,8 +279,9 @@ class CreateGroupBox extends StatefulWidget {
 class _CreateGroupBoxState extends State<CreateGroupBox> {
   final box = GetStorage();
 
-  final AddCommsionGroupController addCommsionGroupController =
-      Get.put(AddCommsionGroupController());
+  final AddCommsionGroupController addCommsionGroupController = Get.put(
+    AddCommsionGroupController(),
+  );
 
   List commissiontype = [];
 
@@ -300,10 +291,7 @@ class _CreateGroupBoxState extends State<CreateGroupBox> {
     super.initState();
 
     commissiontype = [
-      {
-        "name": languagesController.tr("PERCENTAGE"),
-        "value": "percentage",
-      },
+      {"name": languagesController.tr("PERCENTAGE"), "value": "percentage"},
     ];
   }
 
@@ -316,9 +304,7 @@ class _CreateGroupBoxState extends State<CreateGroupBox> {
     return Container(
       height: 400,
       width: screenWidth,
-      decoration: BoxDecoration(
-        color: Colors.white,
-      ),
+      decoration: BoxDecoration(color: Colors.white),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
         child: Column(
@@ -335,14 +321,9 @@ class _CreateGroupBoxState extends State<CreateGroupBox> {
                   ),
                 ),
                 Expanded(
-                  child: Container(
-                    height: 1,
-                    color: Colors.grey.shade300,
-                  ),
+                  child: Container(height: 1, color: Colors.grey.shade300),
                 ),
-                SizedBox(
-                  width: 8,
-                ),
+                SizedBox(width: 8),
                 Text(
                   languagesController.tr("COMMISSION_GROUP"),
                   style: TextStyle(
@@ -350,14 +331,9 @@ class _CreateGroupBoxState extends State<CreateGroupBox> {
                     fontSize: screenHeight * 0.022,
                   ),
                 ),
-                SizedBox(
-                  width: 8,
-                ),
+                SizedBox(width: 8),
                 Expanded(
-                  child: Container(
-                    height: 2,
-                    color: Colors.grey.shade300,
-                  ),
+                  child: Container(height: 2, color: Colors.grey.shade300),
                 ),
                 Transform.rotate(
                   angle: 0.785398, // 45 degrees in radians (π/4 or 0.785398)
@@ -369,9 +345,7 @@ class _CreateGroupBoxState extends State<CreateGroupBox> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 12,
-            ),
+            SizedBox(height: 12),
             Row(
               children: [
                 Text(
@@ -383,16 +357,12 @@ class _CreateGroupBoxState extends State<CreateGroupBox> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 5,
-            ),
+            SizedBox(height: 5),
             Authtextfield(
               hinttext: languagesController.tr("ENTER_GROUP_NAME"),
               controller: addCommsionGroupController.nameController,
             ),
-            SizedBox(
-              height: 5,
-            ),
+            SizedBox(height: 5),
             Row(
               children: [
                 Text(
@@ -404,12 +374,10 @@ class _CreateGroupBoxState extends State<CreateGroupBox> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 5,
-            ),
+            SizedBox(height: 5),
             Obx(() {
-              final List<Map<String, dynamic>> types =
-                  (commissiontype as List).cast<Map<String, dynamic>>();
+              final List<Map<String, dynamic>> types = (commissiontype as List)
+                  .cast<Map<String, dynamic>>();
 
               return Container(
                 height: 50,
@@ -429,10 +397,7 @@ class _CreateGroupBoxState extends State<CreateGroupBox> {
                   items: types.map<DropdownMenuItem<String>>((t) {
                     final String v = (t["value"] ?? "").toString();
                     final String n = (t["name"] ?? "").toString();
-                    return DropdownMenuItem<String>(
-                      value: v,
-                      child: Text(n),
-                    );
+                    return DropdownMenuItem<String>(value: v, child: Text(n));
                   }).toList(),
                   onChanged: (value) {
                     if (value == null) return;
@@ -468,9 +433,7 @@ class _CreateGroupBoxState extends State<CreateGroupBox> {
                 ),
               );
             }),
-            SizedBox(
-              height: 5,
-            ),
+            SizedBox(height: 5),
             Row(
               children: [
                 Text(
@@ -482,16 +445,12 @@ class _CreateGroupBoxState extends State<CreateGroupBox> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 5,
-            ),
+            SizedBox(height: 5),
             Authtextfield(
               hinttext: languagesController.tr("ENTER_AMOUNT_OR_VALUE"),
               controller: addCommsionGroupController.amountController,
             ),
-            SizedBox(
-              height: 15,
-            ),
+            SizedBox(height: 15),
             Container(
               height: 50,
               width: double.maxFinite,
@@ -528,17 +487,19 @@ class _CreateGroupBoxState extends State<CreateGroupBox> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
+                  SizedBox(width: 10),
                   Expanded(
                     flex: 3,
                     child: GestureDetector(
                       onTap: () {
                         if (addCommsionGroupController
-                                .nameController.text.isNotEmpty &&
+                                .nameController
+                                .text
+                                .isNotEmpty &&
                             addCommsionGroupController
-                                .amountController.text.isNotEmpty &&
+                                .amountController
+                                .text
+                                .isNotEmpty &&
                             addCommsionGroupController.commissiontype.value !=
                                 "") {
                           addCommsionGroupController.createnow();
@@ -553,18 +514,20 @@ class _CreateGroupBoxState extends State<CreateGroupBox> {
                           borderRadius: BorderRadius.circular(25),
                         ),
                         child: Center(
-                            child: Obx(
-                          () => Text(
-                            addCommsionGroupController.isLoading.value == false
-                                ? languagesController.tr("CREATE_NOW")
-                                : languagesController.tr("PLEASE_WAIT"),
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
+                          child: Obx(
+                            () => Text(
+                              addCommsionGroupController.isLoading.value ==
+                                      false
+                                  ? languagesController.tr("CREATE_NOW")
+                                  : languagesController.tr("PLEASE_WAIT"),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                        )),
+                        ),
                       ),
                     ),
                   ),

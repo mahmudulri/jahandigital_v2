@@ -34,7 +34,7 @@ class _TransactionsState extends State<Transactions> {
   String secondDropDown = "";
 
   final transactionController = Get.find<TransactionController>();
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final dashboardController = Get.find<DashboardController>();
 
@@ -110,7 +110,7 @@ class _TransactionsState extends State<Transactions> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.goBack();
+                          mypagecontroller.handleBack();
                         },
                         child: Container(
                           height: 45,

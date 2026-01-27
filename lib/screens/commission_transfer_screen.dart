@@ -23,7 +23,7 @@ class CommissionTransferScreen extends StatefulWidget {
 }
 
 class _CommissionTransferScreenState extends State<CommissionTransferScreen> {
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
 
   TransferlistController transferlistController = Get.put(
     TransferlistController(),
@@ -73,7 +73,7 @@ class _CommissionTransferScreenState extends State<CommissionTransferScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.goBack();
+                          mypagecontroller.handleBack();
                         },
                         child: Container(
                           height: 45,
@@ -164,10 +164,7 @@ class _CommissionTransferScreenState extends State<CommissionTransferScreen> {
                         buttonName: languagesController.tr("CREATE_NEW"),
                         mycolor: AppColors.primaryColor,
                         onpressed: () {
-                          mypagecontroller.changePage(
-                            CreateTransferScreen(),
-                            isMainPage: false,
-                          );
+                          mypagecontroller.openSubPage(CreateTransferScreen());
                         },
                       ),
                     ),

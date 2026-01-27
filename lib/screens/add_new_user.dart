@@ -44,9 +44,7 @@ class _AddNewUserState extends State<AddNewUser> {
   final box = GetStorage();
   final Mypagecontroller mypagecontroller = Get.find();
 
-  final LanguagesController languagesController = Get.put(
-    LanguagesController(),
-  );
+  final languagesController = Get.find<LanguagesController>();
   final AddSubResellerController addSubResellerController = Get.put(
     AddSubResellerController(),
   );
@@ -71,6 +69,7 @@ class _AddNewUserState extends State<AddNewUser> {
   @override
   void initState() {
     super.initState();
+    print("...................");
     _resetDatafield();
     commissionlistController.fetchGrouplist();
   }
@@ -114,7 +113,7 @@ class _AddNewUserState extends State<AddNewUser> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.goBack();
+                          mypagecontroller.handleBack();
                         },
                         child: Container(
                           height: 45,

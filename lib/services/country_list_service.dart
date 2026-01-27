@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,6 +19,7 @@ class CountryListApi {
       url,
       headers: {'Authorization': 'Bearer ${box.read("userToken")}'},
     );
+    final decodedBody = json.decode(response.body);
 
     if (response.statusCode == 200) {
       final countryModel = CountryListModel.fromJson(
@@ -45,8 +47,17 @@ class CountryListApi {
       }
 
       return countryModel;
-    } else {
-      throw Exception('Failed to fetch gateway');
+    } // 🔴 Handle 403 – account deactivated
+    if (response.statusCode == 403) {
+      Fluttertoast.showToast(
+        msg: decodedBody['message'],
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+      );
+      throw Exception(decodedBody['message'] ?? 'Your account is deactivated');
     }
+
+    // 🔴 Handle all other errors
+    throw Exception(decodedBody['message'] ?? 'Failed to fetch hawala list');
   }
 }

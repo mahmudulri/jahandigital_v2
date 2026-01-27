@@ -56,7 +56,7 @@ class Order {
   final Bundle? bundle;
 
   final String? orderType;
-  final int? transactionId;
+  final String? transactionId;
   final String? status;
   final dynamic rejectReason;
 

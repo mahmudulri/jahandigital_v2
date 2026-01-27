@@ -11,7 +11,7 @@ import '../global_controller/languages_controller.dart';
 /// Use this GlobalKey in your widget to wrap the part you want to capture.
 GlobalKey catpureKey = GlobalKey();
 
-LanguagesController languageController = Get.put(LanguagesController());
+final languageController = Get.find<LanguagesController>();
 
 /// Capture the widget and save as image in Android Gallery.
 Future<void> capturePng() async {

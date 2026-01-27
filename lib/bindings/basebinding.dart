@@ -15,6 +15,7 @@ import '../controllers/district_controller.dart';
 import '../controllers/hawala_currency_controller.dart';
 import '../controllers/hawala_list_controller.dart';
 import '../controllers/province_controller.dart';
+import '../controllers/recharge_config_controller.dart';
 import '../controllers/service_controller.dart';
 import '../controllers/sign_in_controller.dart';
 import '../controllers/slider_controller.dart';
@@ -51,5 +52,6 @@ class Basebinding implements Bindings {
     Get.lazyPut<HawalaCurrencyController>(() => HawalaCurrencyController());
     Get.lazyPut<CommissionGroupController>(() => CommissionGroupController());
     Get.lazyPut<LanguagesController>(() => LanguagesController());
+    Get.lazyPut<RechargeConfigController>(() => RechargeConfigController());
   }
 }

@@ -58,7 +58,7 @@ class SignInController extends GetxController {
       print("Response Body: ${response.statusCode}");
 
       if (response.statusCode == 200) {
-        dashboardController.fetchDashboardData();
+        // dashboardController.fetchDashboardData();
         box.write("userToken", results["data"]["api_token"]);
         box.write(
           "countryID",

@@ -34,10 +34,12 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
   SignInController signInController = Get.put(SignInController());
 
   CurrencyController currencyController = Get.put(CurrencyController());
-  PaymentMethodController paymentMethodController =
-      Get.put(PaymentMethodController());
-  PaymentTypeController paymentTypeController =
-      Get.put(PaymentTypeController());
+  PaymentMethodController paymentMethodController = Get.put(
+    PaymentMethodController(),
+  );
+  PaymentTypeController paymentTypeController = Get.put(
+    PaymentTypeController(),
+  );
 
   final box = GetStorage();
 
@@ -45,7 +47,7 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
 
   RxString person = "".obs;
   final pageController = Get.find<Mypagecontroller>();
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
 
   AddPaymentController addPaymentController = Get.put(AddPaymentController());
 
@@ -79,9 +81,7 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
         elevation: 0.0,
         shadowColor: Colors.transparent,
         flexibleSpace: Container(
-          decoration: BoxDecoration(
-            color: Color(0xffF1F3FF),
-          ),
+          decoration: BoxDecoration(color: Color(0xffF1F3FF)),
           child: SafeArea(
             child: Padding(
               padding: EdgeInsets.only(left: 15, right: 15, top: 5),
@@ -92,7 +92,7 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.goBack();
+                          mypagecontroller.handleBack();
                         },
                         child: Container(
                           height: 45,
@@ -105,9 +105,7 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                             ),
                           ),
                           child: Center(
-                            child: Icon(
-                              FontAwesomeIcons.chevronLeft,
-                            ),
+                            child: Icon(FontAwesomeIcons.chevronLeft),
                           ),
                         ),
                       ),
@@ -142,9 +140,7 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
       body: Container(
         height: screenHeight,
         width: screenWidth,
-        decoration: BoxDecoration(
-          color: Color(0xffF1F3FF),
-        ),
+        decoration: BoxDecoration(color: Color(0xffF1F3FF)),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 15),
           child: ListView(
@@ -155,12 +151,14 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                 color: Colors.grey.shade600,
                 fontSize: screenHeight * 0.020,
               ),
-              SizedBox(
-                height: 5,
-              ),
+              SizedBox(height: 5),
               Obx(() {
-                final methods = paymentMethodController
-                        .allmethods.value.data?.paymentMethods ??
+                final methods =
+                    paymentMethodController
+                        .allmethods
+                        .value
+                        .data
+                        ?.paymentMethods ??
                     [];
 
                 return Container(
@@ -169,10 +167,7 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.grey.shade300,
-                    ),
+                    border: Border.all(width: 1, color: Colors.grey.shade300),
                   ),
                   padding: EdgeInsets.only(left: 10, right: 10),
                   child: DropdownButtonFormField<String>(
@@ -222,9 +217,7 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                   ),
                 );
               }),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -240,9 +233,7 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 5,
-              ),
+              SizedBox(height: 5),
               Container(
                 height: 50,
                 width: screenWidth,
@@ -262,19 +253,15 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                           color: Color(0xffF9FAFB),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.only(
-                            left: 15,
-                            right: 15,
-                          ),
+                          padding: EdgeInsets.only(left: 15, right: 15),
                           child: TextField(
                             controller: addPaymentController.amountController,
-                            style: TextStyle(
-                              height: 1.1,
-                            ),
+                            style: TextStyle(height: 1.1),
                             keyboardType: TextInputType.phone,
                             inputFormatters: <TextInputFormatter>[
                               FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d*\.?\d{0,2}')),
+                                RegExp(r'^\d*\.?\d{0,2}'),
+                              ),
                             ],
                             decoration: InputDecoration(
                               border: InputBorder.none,
@@ -288,9 +275,7 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
+                    SizedBox(width: 10),
                     Expanded(
                       flex: 2,
                       child: Container(
@@ -325,16 +310,18 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                                             height: 250,
                                             width: double.maxFinite,
                                             child: Obx(
-                                              () => currencyController
-                                                          .isLoading.value ==
+                                              () =>
+                                                  currencyController
+                                                          .isLoading
+                                                          .value ==
                                                       false
                                                   ? ListView.separated(
                                                       separatorBuilder:
                                                           (context, index) {
-                                                        return SizedBox(
-                                                          height: 5,
-                                                        );
-                                                      },
+                                                            return SizedBox(
+                                                              height: 5,
+                                                            );
+                                                          },
                                                       itemCount:
                                                           currencyController
                                                               .allcurrency
@@ -342,37 +329,33 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                                                               .data!
                                                               .currencies!
                                                               .length,
-                                                      itemBuilder:
-                                                          (context, index) {
+                                                      itemBuilder: (context, index) {
                                                         final data =
                                                             currencyController
-                                                                    .allcurrency
-                                                                    .value
-                                                                    .data!
-                                                                    .currencies![
-                                                                index];
+                                                                .allcurrency
+                                                                .value
+                                                                .data!
+                                                                .currencies![index];
                                                         return GestureDetector(
                                                           onTap: () {
                                                             addPaymentController
-                                                                    .currencyID
-                                                                    .value =
-                                                                data.id
-                                                                    .toString();
+                                                                .currencyID
+                                                                .value = data.id
+                                                                .toString();
                                                             selectedcurrency
-                                                                    .value =
-                                                                data.code
-                                                                    .toString();
+                                                                .value = data
+                                                                .code
+                                                                .toString();
                                                             Navigator.pop(
-                                                                context);
+                                                              context,
+                                                            );
                                                           },
                                                           child: Container(
                                                             height: 40,
                                                             width: double
                                                                 .maxFinite,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              border:
-                                                                  Border.all(
+                                                            decoration: BoxDecoration(
+                                                              border: Border.all(
                                                                 width: 1,
                                                                 color: Colors
                                                                     .grey
@@ -381,8 +364,9 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                                                             ),
                                                             child: Padding(
                                                               padding:
-                                                                  EdgeInsets
-                                                                      .all(5.0),
+                                                                  EdgeInsets.all(
+                                                                    5.0,
+                                                                  ),
                                                               child: Center(
                                                                 child: Row(
                                                                   children: [
@@ -410,8 +394,8 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                                     );
                                   },
                                   child: CircleAvatar(
-                                    backgroundColor:
-                                        AppColors.primaryColor.withOpacity(0.7),
+                                    backgroundColor: AppColors.primaryColor
+                                        .withOpacity(0.7),
                                     radius: 14,
                                     child: Icon(
                                       FontAwesomeIcons.chevronDown,
@@ -429,27 +413,20 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 10),
               KText(
                 text: languagesController.tr("PAYMENT_DATE"),
                 color: Colors.grey.shade600,
                 fontSize: screenHeight * 0.020,
               ),
-              SizedBox(
-                height: 5,
-              ),
+              SizedBox(height: 5),
               Container(
                 height: 50,
                 width: screenWidth,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    width: 1,
-                    color: Colors.grey.shade300,
-                  ),
+                  border: Border.all(width: 1, color: Colors.grey.shade300),
                 ),
                 child: Padding(
                   padding: EdgeInsets.only(left: 10, right: 10),
@@ -490,47 +467,35 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 10),
               KText(
                 text: languagesController.tr("TRACKING_CODE"),
                 color: Colors.grey.shade600,
                 fontSize: screenHeight * 0.020,
               ),
-              SizedBox(
-                height: 5,
-              ),
+              SizedBox(height: 5),
               Authtextfield(
                 hinttext: "",
                 controller: addPaymentController.trackingCodeController,
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 10),
               KText(
                 text: languagesController.tr("NOTES"),
                 color: Colors.grey.shade600,
                 fontSize: screenHeight * 0.020,
               ),
-              SizedBox(
-                height: 5,
-              ),
+              SizedBox(height: 5),
               Authtextfield(
                 hinttext: "",
                 controller: addPaymentController.noteController,
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 10),
               KText(
                 text: languagesController.tr("PAYMENT_TYPE"),
                 color: Colors.grey.shade600,
                 fontSize: screenHeight * 0.020,
               ),
-              SizedBox(
-                height: 5,
-              ),
+              SizedBox(height: 5),
               Obx(() {
                 final List<PaymentType> types =
                     (paymentTypeController.alltypes.value.data?.paymentTypes ??
@@ -543,10 +508,7 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.grey.shade300,
-                    ),
+                    border: Border.all(width: 1, color: Colors.grey.shade300),
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: DropdownButtonFormField<String>(
@@ -593,17 +555,16 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                       ),
                     ),
                     hint: KText(
-                      text:
-                          selectedType.value.isEmpty ? '' : selectedType.value,
+                      text: selectedType.value.isEmpty
+                          ? ''
+                          : selectedType.value,
                       fontSize: screenHeight * 0.020,
                       color: Colors.grey.shade600,
                     ),
                   ),
                 );
               }),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 10),
               KText(
                 text: languagesController.tr("UPLOAD_IMAGES"),
                 color: Colors.grey.shade600,
@@ -637,9 +598,7 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: 20),
               Obx(
                 () => DefaultButton(
                   mycolor: AppColors.primaryColor,
@@ -653,7 +612,9 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                         addPaymentController.selectedDate.value ==
                             '' || // <-- FIXED
                         addPaymentController
-                            .trackingCodeController.text.isEmpty ||
+                            .trackingCodeController
+                            .text
+                            .isEmpty ||
                         addPaymentController.noteController.text.isEmpty) {
                       Fluttertoast.showToast(
                         msg: "Please fill all required fields correctly",
@@ -670,9 +631,7 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                   },
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: 20),
             ],
           ),
         ),
@@ -697,10 +656,7 @@ Widget buildImageUploaderBox(
             height: 150,
             decoration: BoxDecoration(
               color: Colors.white,
-              border: Border.all(
-                color: Colors.grey.shade300,
-                width: 1,
-              ),
+              border: Border.all(color: Colors.grey.shade300, width: 1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: imagePath.value.isNotEmpty
@@ -740,11 +696,7 @@ Widget buildImageUploaderBox(
                   color: Colors.black.withOpacity(0.6),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  Icons.close,
-                  size: 18,
-                  color: Colors.white,
-                ),
+                child: Icon(Icons.close, size: 18, color: Colors.white),
               ),
             ),
           ),

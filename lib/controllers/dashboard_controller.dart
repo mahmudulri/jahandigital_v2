@@ -4,12 +4,20 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:jahandigital/controllers/company_controller.dart';
 import 'package:jahandigital/models/dashboard_data_model.dart';
 import 'package:jahandigital/utils/api_endpoints.dart';
 
 final box = GetStorage();
 
+final companyController = Get.find<CompanyController>();
+
 class DashboardController extends GetxController {
+  void onOrdersTabOpened() {
+    fetchDashboardData();
+    companyController.fetchCompany();
+  }
+
   RxString message = "".obs;
   RxString myerror = "".obs;
   var isLoading = false.obs;
@@ -18,6 +26,7 @@ class DashboardController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    print("kader");
     fetchDashboardData();
   }
 
@@ -52,7 +61,8 @@ class DashboardController extends GetxController {
         headers: {'Authorization': 'Bearer ${box.read("userToken")}'},
       );
 
-      print("Dashboard response status: ${response.statusCode}");
+      // print("Dashboard response status: ${response.statusCode}");
+      // print("Dashboard response status: ${response.body}");
       final results = jsonDecode(response.body);
 
       if (response.statusCode == 200) {

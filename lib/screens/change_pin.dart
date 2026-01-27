@@ -20,7 +20,7 @@ class ChangePinScreen extends StatelessWidget {
     ChangePinController(),
   );
 
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
   final Mypagecontroller mypagecontroller = Get.find();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -47,7 +47,7 @@ class ChangePinScreen extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.goBack();
+                          mypagecontroller.handleBack();
                         },
                         child: Container(
                           height: 45,

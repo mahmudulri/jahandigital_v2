@@ -8,30 +8,22 @@ import '../global_controller/languages_controller.dart';
 Future<void> _launchUrl(String url) async {
   final Uri uri = Uri.parse(url);
 
-  if (!await launchUrl(
-    uri,
-    mode: LaunchMode.externalApplication,
-  )) {
+  if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
     // fallback to browser
-    if (!await launchUrl(
-      uri,
-      mode: LaunchMode.inAppBrowserView,
-    )) {
+    if (!await launchUrl(uri, mode: LaunchMode.inAppBrowserView)) {
       throw 'Could not launch $url';
     }
   }
 }
 
-LanguagesController languagesController = Get.put(LanguagesController());
+final languagesController = Get.find<LanguagesController>();
 
 void showSocialPopup(BuildContext context) {
   showDialog(
     context: context,
     builder: (BuildContext ctx) {
       return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         backgroundColor: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -126,16 +118,11 @@ Widget _socialButton({
     child: ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       ),
       icon: Icon(icon, color: Colors.white, size: 20),
-      label: Text(
-        label,
-        style: const TextStyle(color: Colors.white),
-      ),
+      label: Text(label, style: const TextStyle(color: Colors.white)),
       onPressed: () => isWhatsApp ? whatsapp() : _launchUrl(url),
     ),
   );
@@ -152,8 +139,10 @@ Future<void> whatsapp() async {
     if (Platform.isIOS) {
       await launchUrl(Uri.parse(iosUrl), mode: LaunchMode.externalApplication);
     } else {
-      await launchUrl(Uri.parse(androidUrl),
-          mode: LaunchMode.externalApplication);
+      await launchUrl(
+        Uri.parse(androidUrl),
+        mode: LaunchMode.externalApplication,
+      );
     }
   } catch (e) {
     print("WhatsApp not found: $e");

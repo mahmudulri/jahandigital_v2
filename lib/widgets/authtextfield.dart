@@ -7,18 +7,14 @@ class Authtextfield extends StatefulWidget {
   final String hinttext;
   final TextEditingController? controller;
 
-  const Authtextfield({
-    super.key,
-    required this.hinttext,
-    this.controller,
-  });
+  const Authtextfield({super.key, required this.hinttext, this.controller});
 
   @override
   State<Authtextfield> createState() => _AuthtextfieldState();
 }
 
 class _AuthtextfieldState extends State<Authtextfield> {
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
   bool _obscureText = true; // password hide/show flag
 
   @override
@@ -29,10 +25,7 @@ class _AuthtextfieldState extends State<Authtextfield> {
       height: screenHeight * 0.065,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          width: 1,
-          color: Colors.grey.shade300,
-        ),
+        border: Border.all(width: 1, color: Colors.grey.shade300),
         color: const Color(0xffF9FAFB),
       ),
       child: Padding(
@@ -45,18 +38,15 @@ class _AuthtextfieldState extends State<Authtextfield> {
                 controller: widget.controller,
                 obscureText:
                     widget.hinttext == languagesController.tr("PASSWORD")
-                        ? _obscureText
-                        : false,
+                    ? _obscureText
+                    : false,
                 keyboardType: widget.hinttext == "Enter amount"
                     ? TextInputType.phone
                     : TextInputType.text,
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: widget.hinttext,
-                  hintStyle: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 15,
-                  ),
+                  hintStyle: const TextStyle(color: Colors.grey, fontSize: 15),
                 ),
               ),
             ),

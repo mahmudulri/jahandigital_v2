@@ -21,6 +21,8 @@ import 'package:jahandigital/widgets/custom_text.dart';
 import 'package:jahandigital/widgets/drawer.dart';
 import '../controllers/categories_controller.dart';
 import '../controllers/company_controller.dart';
+import '../controllers/custom_history_controller.dart';
+import '../controllers/recharge_config_controller.dart';
 import '../controllers/slider_controller.dart';
 import '../global_controller/page_controller.dart';
 import '../screens/social_bundles.dart';
@@ -43,6 +45,8 @@ class _HomepagesState extends State<Homepages> {
   final dashboardController = Get.find<DashboardController>();
 
   final categorisListController = Get.find<CategorisListController>();
+  final configController = Get.find<RechargeConfigController>();
+  final customhistoryController = Get.find<CustomHistoryController>();
 
   int currentindex = 0;
 
@@ -89,7 +93,11 @@ class _HomepagesState extends State<Homepages> {
   @override
   void initState() {
     super.initState();
-    dashboardController.fetchDashboard();
+    print("kader");
+
+    // dashboardController.fetchDashboardData();
+    configController.fetchrechargeConfig();
+    categorisListController.fetchcategories();
     _checkforUpdate();
     companyController.fetchCompany();
   }
@@ -122,7 +130,7 @@ class _HomepagesState extends State<Homepages> {
 
   final bundleController = Get.find<BundleController>();
 
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
   MyDrawerController drawerController = Get.put(MyDrawerController());
   final companyController = Get.find<CompanyController>();
 
@@ -145,6 +153,7 @@ class _HomepagesState extends State<Homepages> {
   CountryListController countrylistController = Get.put(
     CountryListController(),
   );
+  final Mypagecontroller mypagecontroller = Get.find();
 
   Future<void> bodyrefresh() async {
     // This function is called when the user pulls down the ListView
@@ -157,8 +166,6 @@ class _HomepagesState extends State<Homepages> {
 
   @override
   Widget build(BuildContext context) {
-    confirmPinController.numberController.clear();
-    final Mypagecontroller mypagecontroller = Get.find();
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
 
@@ -265,6 +272,13 @@ class _HomepagesState extends State<Homepages> {
                       ),
                     ),
                   ),
+                ),
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    dashboardController.fetchDashboardData();
+                  },
+                  child: Icon(Icons.refresh, size: 35),
                 ),
               ],
             ),
@@ -534,13 +548,13 @@ class _HomepagesState extends State<Homepages> {
                         buttonName: languagesController.tr("CREDIT_TRANSFER"),
                         mycolor: Color(0xffFFFFFF),
                         onpressed: () {
-                          mypagecontroller.changePage(
-                            CreditTransfer(),
-                            isMainPage: false,
-                          );
+                          customhistoryController.finalList.clear();
+                          customhistoryController.initialpage = 1;
+                          customhistoryController.fetchHistory();
+                          mypagecontroller.openSubPage(CreditTransfer());
 
-                          print(box.read("afghanistan_id"));
-                          print(box.read("afghanistan_flag"));
+                          // print(box.read("afghanistan_id"));
+                          // print(box.read("afghanistan_flag"));
                         },
                       ),
                     ),
@@ -548,16 +562,21 @@ class _HomepagesState extends State<Homepages> {
                     Row(
                       children: [
                         Obx(
-                          () => Text(
-                            languageController.tr("SERVICES"),
-                            style: TextStyle(
-                              fontSize: screenWidth * 0.045,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xff8082ED),
-                              fontFamily:
-                                  languagesController.selectedlan == "Fa"
-                                  ? "Iranfont"
-                                  : "Roboto",
+                          () => GestureDetector(
+                            onTap: () {
+                              categorisListController.fetchcategories();
+                            },
+                            child: Text(
+                              languageController.tr("SERVICES"),
+                              style: TextStyle(
+                                fontSize: screenWidth * 0.045,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xff8082ED),
+                                fontFamily:
+                                    languagesController.selectedlan == "Fa"
+                                    ? "Iranfont"
+                                    : "Roboto",
+                              ),
                             ),
                           ),
                         ),
@@ -614,9 +633,8 @@ class _HomepagesState extends State<Homepages> {
                                     );
 
                                     if (data.type.toString() == "nonsocial") {
-                                      mypagecontroller.changePage(
+                                      mypagecontroller.openSubPage(
                                         InternetPack(),
-                                        isMainPage: false,
                                       );
                                       countrylistController.fetchCountryData();
                                     } else {
@@ -637,10 +655,10 @@ class _HomepagesState extends State<Homepages> {
                                       box.write("company_id", "");
                                       bundleController.finalList.clear();
                                       bundleController.initialpage = 1;
+                                      bundleController.fetchallbundles();
 
-                                      mypagecontroller.changePage(
+                                      mypagecontroller.openSubPage(
                                         SocialBundles(),
-                                        isMainPage: false,
                                       );
                                     }
                                   },
@@ -679,6 +697,7 @@ class _HomepagesState extends State<Homepages> {
                             )
                           : Center(child: CircularProgressIndicator()),
                     ),
+
                     SizedBox(height: 80),
                   ],
                 ),

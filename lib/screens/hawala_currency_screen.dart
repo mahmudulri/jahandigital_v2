@@ -24,7 +24,7 @@ class _HawalaCurrencyScreenState extends State<HawalaCurrencyScreen> {
   final box = GetStorage();
 
   final hawalacurrencycontroller = Get.find<HawalaCurrencyController>();
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
 
   final Mypagecontroller mypagecontroller = Get.find();
   @override
@@ -55,7 +55,7 @@ class _HawalaCurrencyScreenState extends State<HawalaCurrencyScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.goBack();
+                          mypagecontroller.handleBack();
                         },
                         child: Container(
                           height: 45,

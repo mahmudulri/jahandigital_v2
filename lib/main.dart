@@ -6,12 +6,14 @@ import 'package:get_storage/get_storage.dart';
 import 'package:jahandigital/controllers/network_checker.dart';
 import 'package:jahandigital/routes/routes.dart';
 
+import 'global_controller/languages_controller.dart';
 import 'global_controller/time_zone_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await GetStorage.init();
+  Get.put(LanguagesController(), permanent: true);
   runApp(
     EasyLocalization(
       supportedLocales: [

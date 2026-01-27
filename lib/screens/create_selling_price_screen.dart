@@ -24,7 +24,7 @@ class CreateSellingPriceScreen extends StatefulWidget {
 }
 
 class _CreateSellingPriceScreenState extends State<CreateSellingPriceScreen> {
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
 
   final categorisListController = Get.find<CategorisListController>();
   List commissiontype = [];
@@ -80,7 +80,7 @@ class _CreateSellingPriceScreenState extends State<CreateSellingPriceScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.goBack();
+                          mypagecontroller.handleBack();
                         },
                         child: Container(
                           height: 45,

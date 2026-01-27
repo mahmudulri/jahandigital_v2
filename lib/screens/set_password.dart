@@ -19,7 +19,7 @@ class SetPassword extends StatelessWidget {
     SubresellerPassController(),
   );
 
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -48,10 +48,11 @@ class SetPassword extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.changePage(
-                            Network(),
-                            isMainPage: false,
-                          );
+                          mypagecontroller.handleBack();
+                          // mypagecontroller.changePage(
+                          //   Network(),
+                          //   isMainPage: false,
+                          // );
                         },
                         child: Container(
                           height: 45,

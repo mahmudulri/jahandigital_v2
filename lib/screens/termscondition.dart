@@ -10,8 +10,7 @@ import '../pages/homepages.dart';
 
 class Termscondition extends StatelessWidget {
   Termscondition({super.key});
-
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
 
   final Mypagecontroller mypagecontroller = Get.find();
 
@@ -46,10 +45,10 @@ class Termscondition extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.changePage(
-                            Homepages(),
-                            isMainPage: true,
-                          );
+                          // mypagecontroller.changePage(
+                          //   Homepages(),
+                          //   isMainPage: true,
+                          // );
                         },
                         child: Container(
                           height: 45,

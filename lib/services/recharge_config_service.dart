@@ -1,18 +1,18 @@
 import 'dart:convert';
-
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
-
-import '../models/branch_model.dart';
-
+import '../models/recharge_config_model.dart';
+import '../models/service_model.dart';
+import '../models/setting_model.dart';
 import '../utils/api_endpoints.dart';
 
-class BranchApi {
+class RechargeConfigApi {
   final box = GetStorage();
-  Future<BranchModel> fetchBranch() async {
+  Future<RechargeConfigModel> fetchconfig() async {
     final url = Uri.parse(
-      ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.branch,
+      "${ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.rechargeconfig}",
     );
+    print(url);
 
     var response = await http.get(
       url,
@@ -20,10 +20,11 @@ class BranchApi {
     );
 
     if (response.statusCode == 200) {
-      // print(response.body.toString());
-      final branchModel = BranchModel.fromJson(json.decode(response.body));
+      final rechargeconfigModel = RechargeConfigModel.fromJson(
+        json.decode(response.body),
+      );
 
-      return branchModel;
+      return rechargeconfigModel;
     } else {
       throw Exception('Failed to fetch gateway');
     }

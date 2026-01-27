@@ -15,9 +15,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final dashboardController = Get.find<DashboardController>();
   final box = GetStorage();
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
 
   checkData() async {
     String languageShortName = box.read("language") ?? "Fa";
@@ -72,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Get.toNamed(signinscreen);
     } else {
       // Fetch initial data
-      dashboardController.fetchDashboardData();
+      // dashboardController.fetchDashboardData();
 
       Get.toNamed(basescreen);
     }

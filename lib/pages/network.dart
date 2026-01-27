@@ -31,7 +31,7 @@ class Network extends StatefulWidget {
 final Mypagecontroller mypagecontroller = Get.find();
 
 final subresellercontroller = Get.find<SubresellerController>();
-LanguagesController languagesController = Get.put(LanguagesController());
+final languagesController = Get.find<LanguagesController>();
 final detailsController = Get.find<SubresellerDetailsController>();
 
 final DeleteSubResellerController deleteSubResellerController = Get.put(
@@ -55,8 +55,8 @@ class _NetworkState extends State<Network> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    print("network");
     subresellercontroller.fetchSubReseller();
   }
 
@@ -128,7 +128,7 @@ class _NetworkState extends State<Network> {
                             Obx(
                               () => GestureDetector(
                                 onTap: () {
-                                  dashboardController.fetchDashboard();
+                                  subresellercontroller.fetchSubReseller();
                                 },
                                 child: Text(
                                   languagesController.tr("NETWORK"),
@@ -191,11 +191,7 @@ class _NetworkState extends State<Network> {
                               child: Obx(
                                 () => GestureDetector(
                                   onTap: () {
-                                    mypagecontroller.changePage(
-                                      AddNewUser(),
-                                      isMainPage: false,
-                                    );
-                                    // Get.to(() => AddNewUser());
+                                    mypagecontroller.openSubPage(AddNewUser());
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -505,15 +501,22 @@ class _NetworkState extends State<Network> {
                                                             children: [
                                                               GestureDetector(
                                                                 onTap: () {
-                                                                  mypagecontroller.changePage(
+                                                                  mypagecontroller.openSubPage(
                                                                     ChangeBalance(
                                                                       subID: data
                                                                           .id
                                                                           .toString(),
                                                                     ),
-                                                                    isMainPage:
-                                                                        false,
                                                                   );
+                                                                  // mypagecontroller.changePage(
+                                                                  //   ChangeBalance(
+                                                                  //     subID: data
+                                                                  //         .id
+                                                                  //         .toString(),
+                                                                  //   ),
+                                                                  //   isMainPage:
+                                                                  //       false,
+                                                                  // );
                                                                   Navigator.pop(
                                                                     context,
                                                                   );
@@ -650,15 +653,22 @@ class _NetworkState extends State<Network> {
                                                               ),
                                                               GestureDetector(
                                                                 onTap: () {
-                                                                  mypagecontroller.changePage(
+                                                                  mypagecontroller.openSubPage(
                                                                     SetPassword(
                                                                       subID: data
                                                                           .id
                                                                           .toString(),
                                                                     ),
-                                                                    isMainPage:
-                                                                        false,
                                                                   );
+                                                                  // mypagecontroller.changePage(
+                                                                  //   SetPassword(
+                                                                  //     subID: data
+                                                                  //         .id
+                                                                  //         .toString(),
+                                                                  //   ),
+                                                                  //   isMainPage:
+                                                                  //       false,
+                                                                  // );
                                                                   Navigator.pop(
                                                                     context,
                                                                   );
@@ -694,15 +704,22 @@ class _NetworkState extends State<Network> {
                                                               ),
                                                               GestureDetector(
                                                                 onTap: () {
-                                                                  mypagecontroller.changePage(
+                                                                  mypagecontroller.openSubPage(
                                                                     SetSubresellerPin(
                                                                       subID: data
                                                                           .id
                                                                           .toString(),
                                                                     ),
-                                                                    isMainPage:
-                                                                        false,
                                                                   );
+                                                                  // mypagecontroller.changePage(
+                                                                  //   SetSubresellerPin(
+                                                                  //     subID: data
+                                                                  //         .id
+                                                                  //         .toString(),
+                                                                  //   ),
+                                                                  //   isMainPage:
+                                                                  //       false,
+                                                                  // );
                                                                   Navigator.pop(
                                                                     context,
                                                                   );

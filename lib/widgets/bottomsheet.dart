@@ -13,6 +13,7 @@ import 'package:jahandigital/screens/termscondition.dart';
 import 'package:jahandigital/utils/colors.dart';
 
 import '../controllers/dashboard_controller.dart';
+import '../controllers/sign_in_controller.dart';
 import '../screens/change_password_screen.dart';
 import '../screens/commission_group_screen.dart';
 import '../screens/profile_screen.dart';
@@ -41,9 +42,7 @@ class _CustomFullScreenSheetState extends State<CustomFullScreenSheet> {
 
   final dashboardController = Get.find<DashboardController>();
 
-  final LanguagesController languagesController = Get.put(
-    LanguagesController(),
-  );
+  final languagesController = Get.find<LanguagesController>();
 
   MyDrawerController drawerController = Get.put(MyDrawerController());
 
@@ -160,8 +159,9 @@ class _CustomFullScreenSheetState extends State<CustomFullScreenSheet> {
               imagelink: "assets/icons/user.png",
               menuname: languagesController.tr("PROFILE"),
               onpressed: () {
-                mypagecontroller.changePage(ProfileScreen(), isMainPage: false);
                 Navigator.pop(context);
+                mypagecontroller.openSubPage(ProfileScreen());
+
                 // drawerController.isOpen.value = false;
               },
             ),
@@ -172,11 +172,9 @@ class _CustomFullScreenSheetState extends State<CustomFullScreenSheet> {
               imagelink: "assets/icons/set_sell_price.png",
               menuname: languagesController.tr("SET_SALE_PRICE"),
               onpressed: () {
-                mypagecontroller.changePage(
-                  SellingPriceScreen(),
-                  isMainPage: false,
-                );
                 Navigator.pop(context);
+                mypagecontroller.openSubPage(SellingPriceScreen());
+
                 // drawerController.isOpen.value = false;
               },
             ),
@@ -187,11 +185,9 @@ class _CustomFullScreenSheetState extends State<CustomFullScreenSheet> {
               imagelink: "assets/icons/set_vendor_sell_price.png",
               menuname: languagesController.tr("COMMISSION_GROUP"),
               onpressed: () {
-                mypagecontroller.changePage(
-                  CommissionGroupScreen(),
-                  isMainPage: false,
-                );
                 Navigator.pop(context);
+                mypagecontroller.openSubPage(CommissionGroupScreen());
+
                 // drawerController.isOpen.value = false;
               },
             ),
@@ -202,11 +198,9 @@ class _CustomFullScreenSheetState extends State<CustomFullScreenSheet> {
               imagelink: "assets/icons/padlock.png",
               menuname: languagesController.tr("CHANGE_PASSWORD"),
               onpressed: () {
-                mypagecontroller.changePage(
-                  ChangePasswordScreen(),
-                  isMainPage: false,
-                );
                 Navigator.pop(context);
+                mypagecontroller.openSubPage(ChangePasswordScreen());
+
                 // drawerController.isOpen.value = false;
               },
             ),
@@ -216,11 +210,8 @@ class _CustomFullScreenSheetState extends State<CustomFullScreenSheet> {
             imagelink: "assets/icons/note-text.png",
             menuname: languagesController.tr("HELP"),
             onpressed: () {
-              // mypagecontroller.changePage(
-              //   Helpscreen(),
-              //   isMainPage: false,
-              // );
               Navigator.pop(context);
+              mypagecontroller.openSubPage(Helpscreen());
             },
           ),
           SizedBox(height: screenHeight * 0.015),
@@ -431,6 +422,219 @@ class _CustomFullScreenSheetState extends State<CustomFullScreenSheet> {
             ),
           ),
           SizedBox(height: 60),
+        ],
+      ),
+    );
+  }
+}
+
+class LogoutDialogBox extends StatelessWidget {
+  LogoutDialogBox({super.key});
+
+  final signInController = Get.find<SignInController>();
+  final Mypagecontroller mypagecontroller = Get.find();
+
+  final box = GetStorage();
+
+  final languagesController = Get.find<LanguagesController>();
+
+  @override
+  Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    return Container(
+      height: 200,
+      width: screenWidth,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset("assets/icons/rejected.png", height: 40),
+              SizedBox(width: 15),
+              Text(
+                languagesController.tr("ARE_YOU_READY_TO_LOG_OUT"),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          // SizedBox(
+          //   height: 20,
+          // ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              height: 45,
+              width: screenWidth,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                        signInController.usernameController.clear();
+                        signInController.passwordController.clear();
+
+                        box.remove("userToken");
+
+                        // mypagecontroller.changePage(
+                        //   Homepages(),
+                        //   isMainPage: false,
+                        // );
+
+                        Get.off(() => SignInScreen());
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Text(
+                            languagesController.tr("YES_IAMGOING_OUT"),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 15),
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 1,
+                            color: Colors.grey.shade300,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Text(
+                            languagesController.tr("CANCEL"),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ContactDialogBox extends StatelessWidget {
+  const ContactDialogBox({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    return Container(
+      height: 300,
+      width: screenWidth,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(17),
+        color: Colors.white,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Image.asset("assets/icons/whatsapp2.png", height: 80),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              "You will be redirected to the WhatsApp page to contact us. Continue?",
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              height: 50,
+              width: screenWidth,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: GestureDetector(
+                      onTap: () {
+                        whatsapp();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Yes",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    flex: 2,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 1, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

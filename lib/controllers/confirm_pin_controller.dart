@@ -20,42 +20,10 @@ class ConfirmPinController extends GetxController {
 
   RxBool loadsuccess = false.obs;
 
-  Future<void> verify(BuildContext context) async {
-    try {
-      isLoading.value = true;
-      loadsuccess.value =
-          false; // Start with false, only set to true if successful.
-
-      var url = Uri.parse(
-        "${ApiEndPoints.baseUrl}confirm_pin?pin=${pinController.text}",
-      );
-
-      http.Response response = await http.get(
-        url,
-        headers: {'Authorization': 'Bearer ${box.read("userToken")}'},
-      );
-
-      final results = jsonDecode(response.body);
-
-      if (response.statusCode == 200 && results["success"] == true) {
-        pinController.clear();
-        loadsuccess.value =
-            true; // Mark as successful only if status and success are correct
-
-        // Proceed with placing the order
-        await placeOrder(context);
-      } else {
-        showErrorDialog(context, results["message"]);
-      }
-    } catch (e) {
-      showErrorDialog(context, e.toString());
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
   Future<void> placeOrder(BuildContext context) async {
     try {
+      isLoading.value = true;
+
       var url = Uri.parse("${ApiEndPoints.baseUrl}place_order");
       Map body = {
         'bundle_id': box.read("bundleID"),
@@ -77,7 +45,8 @@ class ConfirmPinController extends GetxController {
 
       final orderResults = jsonDecode(response.body);
       if (response.statusCode == 201 && orderResults["success"] == true) {
-        loadsuccess.value = false;
+        // loadsuccess.value = false;
+        isLoading.value = false;
         pinController.clear();
         numberController.clear();
         box.remove("bundleID");
@@ -86,10 +55,12 @@ class ConfirmPinController extends GetxController {
       } else {
         showErrorDialog(context, orderResults["message"]);
         pinController.clear();
-        loadsuccess.value = false;
+        isLoading.value = false;
+        // loadsuccess.value = false;
       }
     } catch (e) {
       showErrorDialog(context, e.toString());
+      isLoading.value = false;
     }
   }
 
@@ -134,7 +105,6 @@ class ConfirmPinController extends GetxController {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context); // Close success dialog
-                    Navigator.pop(context); // Close main dialog
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
@@ -196,7 +166,6 @@ class ConfirmPinController extends GetxController {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context); // Close error dialog
-                    Navigator.pop(context); // Close main dialog
                   },
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                   child: Text("Close", style: TextStyle(color: Colors.white)),

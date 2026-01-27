@@ -40,7 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   final dashboardController = Get.find<DashboardController>();
 
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
 
   final Mypagecontroller mypagecontroller = Get.find();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -69,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.goBack();
+                          mypagecontroller.handleBack();
                         },
                         child: Container(
                           height: 45,
@@ -181,10 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 100),
                 child: GestureDetector(
                   onTap: () {
-                    mypagecontroller.changePage(
-                      ChangePinScreen(),
-                      isMainPage: false,
-                    );
+                    mypagecontroller.openSubPage(ChangePinScreen());
                   },
                   child: Container(
                     height: screenHeight * 0.055,

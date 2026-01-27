@@ -4,11 +4,17 @@ import '../models/sub_reseller_model.dart';
 import '../services/sub_reseller_service.dart';
 
 class SubresellerController extends GetxController {
-  @override
-  void onInit() {
+  void onOrdersTabOpened() {
+    print("networkcalled..............");
+
     fetchSubReseller();
-    super.onInit();
   }
+
+  // @override
+  // void onInit() {
+  //   fetchSubReseller();
+  //   super.onInit();
+  // }
 
   var isLoading = false.obs;
 

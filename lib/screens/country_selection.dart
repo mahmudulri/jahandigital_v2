@@ -24,7 +24,7 @@ class InternetPack extends StatefulWidget {
 }
 
 class _InternetPackState extends State<InternetPack> {
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
 
   CountryListController countrylistController = Get.put(
     CountryListController(),
@@ -67,10 +67,7 @@ class _InternetPackState extends State<InternetPack> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.changePage(
-                            Homepages(),
-                            isMainPage: true,
-                          );
+                          mypagecontroller.handleBack();
                         },
                         child: Container(
                           height: 45,
@@ -89,11 +86,16 @@ class _InternetPackState extends State<InternetPack> {
                       ),
                       Spacer(),
                       Obx(
-                        () => Text(
-                          languagesController.tr("COUNTRY_SELECTION"),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: screenWidth * 0.045,
+                        () => GestureDetector(
+                          onTap: () {
+                            print(serviceController.isLoading.value);
+                          },
+                          child: Text(
+                            languagesController.tr("COUNTRY_SELECTION"),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: screenWidth * 0.045,
+                            ),
                           ),
                         ),
                       ),
@@ -202,9 +204,12 @@ class _InternetPackState extends State<InternetPack> {
                                       box.write("validity_type", "");
                                       box.write("company_id", "");
                                       box.write("search_tag", "");
-                                      mypagecontroller.changePage(
+
+                                      bundleController.finalList.clear();
+                                      bundleController.initialpage = 1;
+                                      bundleController.fetchallbundles();
+                                      mypagecontroller.openSubPage(
                                         RechargeScreen(),
-                                        isMainPage: false,
                                       );
                                     },
                                     child: Container(

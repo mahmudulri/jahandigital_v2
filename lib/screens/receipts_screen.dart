@@ -22,7 +22,7 @@ class ReceiptsScreen extends StatefulWidget {
 
 final Mypagecontroller mypagecontroller = Get.find();
 
-LanguagesController languagesController = Get.put(LanguagesController());
+final languagesController = Get.find<LanguagesController>();
 
 class _ReceiptsScreenState extends State<ReceiptsScreen> {
   List orderStatus = [];
@@ -64,10 +64,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.changePage(
-                            TransactionsType(),
-                            isMainPage: false,
-                          );
+                          mypagecontroller.handleBack();
                         },
                         child: Container(
                           height: 45,
@@ -141,10 +138,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.changePage(
-                            CreatePaymentsScreen(),
-                            isMainPage: false,
-                          );
+                          mypagecontroller.openSubPage(CreatePaymentsScreen());
                         },
                         child: Container(
                           height: 50,

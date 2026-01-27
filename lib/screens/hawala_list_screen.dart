@@ -27,7 +27,7 @@ class _HawalaListScreenState extends State<HawalaListScreen> {
 
   final Mypagecontroller mypagecontroller = Get.find();
 
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ class _HawalaListScreenState extends State<HawalaListScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.goBack();
+                          mypagecontroller.handleBack();
                         },
                         child: Container(
                           height: 45,
@@ -78,11 +78,16 @@ class _HawalaListScreenState extends State<HawalaListScreen> {
                       ),
                       Spacer(),
                       Obx(
-                        () => Text(
-                          languagesController.tr("HAWALA_ORDER_LIST"),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: screenWidth * 0.040,
+                        () => GestureDetector(
+                          onTap: () {
+                            hawalalistController.fetchhawala();
+                          },
+                          child: Text(
+                            languagesController.tr("HAWALA_ORDER_LIST"),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: screenWidth * 0.040,
+                            ),
                           ),
                         ),
                       ),
@@ -147,10 +152,7 @@ class _HawalaListScreenState extends State<HawalaListScreen> {
                       flex: 4,
                       child: GestureDetector(
                         onTap: () {
-                          mypagecontroller.changePage(
-                            HawalaScreen(),
-                            isMainPage: false,
-                          );
+                          mypagecontroller.openSubPage(HawalaScreen());
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -207,6 +209,9 @@ class _HawalaListScreenState extends State<HawalaListScreen> {
                                       content: HawalaDetailsDialog(
                                         id: data.id.toString(),
                                         hawalaNumber: data.hawalaNumber,
+                                        customHawalaNumber: data
+                                            .hawalaCustomNumber
+                                            .toString(),
                                         status: data.status,
                                         branchID: data.hawalaBranchId,
                                         senderName: data.senderName,
@@ -273,18 +278,35 @@ class _HawalaListScreenState extends State<HawalaListScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text(
-                                              languagesController.tr(
-                                                    "HAWALA_NUMBER",
-                                                  ) +
-                                                  " - " +
-                                                  data.hawalaNumber.toString(),
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
+                                            data.hawalaCustomNumber == null
+                                                ? Text(
+                                                    languagesController.tr(
+                                                          "HAWALA_NUMBER",
+                                                        ) +
+                                                        " - " +
+                                                        data.hawalaNumber
+                                                            .toString(),
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  )
+                                                : Text(
+                                                    languagesController.tr(
+                                                          "HAWALA_NUMBER",
+                                                        ) +
+                                                        " - " +
+                                                        data.hawalaCustomNumber
+                                                            .toString(),
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
                                             Text(
                                               data.status.toString(),
                                               style: TextStyle(
@@ -426,6 +448,7 @@ class HawalaDetailsDialog extends StatelessWidget {
     super.key,
     this.id,
     this.hawalaNumber,
+    this.customHawalaNumber,
     this.status,
     this.branchID,
     this.senderName,
@@ -442,6 +465,7 @@ class HawalaDetailsDialog extends StatelessWidget {
   });
   String? id;
   String? hawalaNumber;
+  String? customHawalaNumber;
   String? status;
   String? branchID;
   String? senderName;
@@ -540,7 +564,9 @@ class HawalaDetailsDialog extends StatelessWidget {
                                 style: TextStyle(fontSize: 14),
                               ),
                               Text(
-                                hawalaNumber.toString(),
+                                customHawalaNumber == null
+                                    ? hawalaNumber.toString()
+                                    : customHawalaNumber.toString(),
                                 style: TextStyle(fontSize: 14),
                               ),
                             ],

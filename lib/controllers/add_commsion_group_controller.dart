@@ -33,7 +33,8 @@ class AddCommsionGroupController extends GetxController {
       };
 
       var url = Uri.parse(
-          ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.commsiongrouplist);
+        ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.commsiongrouplist,
+      );
 
       print("API URL: $url");
 
@@ -47,9 +48,7 @@ class AddCommsionGroupController extends GetxController {
       http.Response response = await http.post(
         url,
         body: body,
-        headers: {
-          'Authorization': 'Bearer ${box.read("userToken")}',
-        },
+        headers: {'Authorization': 'Bearer ${box.read("userToken")}'},
       );
 
       final results = jsonDecode(response.body);
@@ -65,13 +64,14 @@ class AddCommsionGroupController extends GetxController {
         commissionlistController.fetchGrouplist();
         if (results["success"] == true) {
           Fluttertoast.showToast(
-              msg: results["message"],
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0);
+            msg: results["message"],
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
 
           // Fetch country data only if login is successful
         } else {

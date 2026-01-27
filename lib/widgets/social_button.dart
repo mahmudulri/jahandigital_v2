@@ -5,7 +5,7 @@ import 'package:jahandigital/global_controller/languages_controller.dart';
 class SocialButton extends StatelessWidget {
   SocialButton({super.key});
 
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
 
   @override
   Widget build(BuildContext context) {

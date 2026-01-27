@@ -28,7 +28,7 @@ class SetSubresellerPin extends StatefulWidget {
 class _SetSubresellerPinState extends State<SetSubresellerPin> {
   final ChangePinController setpinController = Get.put(ChangePinController());
 
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
@@ -63,7 +63,7 @@ class _SetSubresellerPinState extends State<SetSubresellerPin> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.goBack();
+                          mypagecontroller.handleBack();
                         },
                         child: Container(
                           height: 45,

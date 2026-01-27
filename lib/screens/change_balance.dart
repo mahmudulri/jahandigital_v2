@@ -29,7 +29,7 @@ class _ChangeBalanceState extends State<ChangeBalance> {
   final BalanceController balanceController = Get.put(BalanceController());
   final box = GetStorage();
 
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
 
   @override
   void initState() {
@@ -63,10 +63,11 @@ class _ChangeBalanceState extends State<ChangeBalance> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.changePage(
-                            Network(),
-                            isMainPage: false,
-                          );
+                          mypagecontroller.handleBack();
+                          // mypagecontroller.changePage(
+                          //   Network(),
+                          //   isMainPage: false,
+                          // );
                         },
                         child: Container(
                           height: 45,

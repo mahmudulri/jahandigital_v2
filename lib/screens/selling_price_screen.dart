@@ -21,10 +21,11 @@ class SellingPriceScreen extends StatefulWidget {
 }
 
 class _SellingPriceScreenState extends State<SellingPriceScreen> {
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
 
-  final SellingPriceController sellingPriceController =
-      Get.put(SellingPriceController());
+  final SellingPriceController sellingPriceController = Get.put(
+    SellingPriceController(),
+  );
 
   final box = GetStorage();
 
@@ -41,8 +42,9 @@ class _SellingPriceScreenState extends State<SellingPriceScreen> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final OnlyServiceController serviceController =
-      Get.put(OnlyServiceController());
+  final OnlyServiceController serviceController = Get.put(
+    OnlyServiceController(),
+  );
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
@@ -56,9 +58,7 @@ class _SellingPriceScreenState extends State<SellingPriceScreen> {
         elevation: 0.0,
         shadowColor: Colors.transparent,
         flexibleSpace: Container(
-          decoration: BoxDecoration(
-            color: Color(0xffF1F3FF),
-          ),
+          decoration: BoxDecoration(color: Color(0xffF1F3FF)),
           child: SafeArea(
             child: Padding(
               padding: EdgeInsets.only(left: 15, right: 15, top: 5),
@@ -69,7 +69,7 @@ class _SellingPriceScreenState extends State<SellingPriceScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          mypagecontroller.goBack();
+                          mypagecontroller.handleBack();
                         },
                         child: Container(
                           height: 45,
@@ -82,9 +82,7 @@ class _SellingPriceScreenState extends State<SellingPriceScreen> {
                             ),
                           ),
                           child: Center(
-                            child: Icon(
-                              FontAwesomeIcons.chevronLeft,
-                            ),
+                            child: Icon(FontAwesomeIcons.chevronLeft),
                           ),
                         ),
                       ),
@@ -154,16 +152,13 @@ class _SellingPriceScreenState extends State<SellingPriceScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
+                    SizedBox(width: 10),
                     Expanded(
                       flex: 4,
                       child: GestureDetector(
                         onTap: () {
-                          mypagecontroller.changePage(
+                          mypagecontroller.openSubPage(
                             CreateSellingPriceScreen(),
-                            isMainPage: false,
                           );
                         },
                         child: Container(
@@ -187,23 +182,29 @@ class _SellingPriceScreenState extends State<SellingPriceScreen> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 10),
               Container(
                 height: 500,
                 width: screenWidth,
                 // color: Colors.cyan,
                 child: Obx(
-                  () => sellingPriceController.isLoading.value == false &&
+                  () =>
+                      sellingPriceController.isLoading.value == false &&
                           serviceController.isLoading.value == false
                       ? ListView.builder(
                           physics: BouncingScrollPhysics(),
                           itemCount: sellingPriceController
-                              .allpricelist.value.data!.pricings!.length,
+                              .allpricelist
+                              .value
+                              .data!
+                              .pricings!
+                              .length,
                           itemBuilder: (context, index) {
                             final data = sellingPriceController
-                                .allpricelist.value.data!.pricings![index];
+                                .allpricelist
+                                .value
+                                .data!
+                                .pricings![index];
                             return Container(
                               width: screenWidth,
                               margin: EdgeInsets.only(bottom: 5),
@@ -225,8 +226,11 @@ class _SellingPriceScreenState extends State<SellingPriceScreen> {
                                       decoration: BoxDecoration(
                                         image: DecorationImage(
                                           image: NetworkImage(
-                                            serviceController.allservices.value
-                                                .data!.services
+                                            serviceController
+                                                .allservices
+                                                .value
+                                                .data!
+                                                .services
                                                 .firstWhere(
                                                   (srvs) =>
                                                       srvs.id.toString() ==
@@ -239,9 +243,7 @@ class _SellingPriceScreenState extends State<SellingPriceScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
+                                    SizedBox(width: 5),
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
@@ -252,8 +254,11 @@ class _SellingPriceScreenState extends State<SellingPriceScreen> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                serviceController.allservices
-                                                    .value.data!.services
+                                                serviceController
+                                                    .allservices
+                                                    .value
+                                                    .data!
+                                                    .services
                                                     .firstWhere(
                                                       (srvs) =>
                                                           srvs.id.toString() ==
@@ -273,13 +278,15 @@ class _SellingPriceScreenState extends State<SellingPriceScreen> {
                                                     .firstWhere(
                                                       (cat) =>
                                                           cat.id.toString() ==
-                                                          data.service!
+                                                          data
+                                                              .service!
                                                               .serviceCategoryId
                                                               .toString(),
                                                       orElse: () =>
                                                           Servicecategory(
-                                                              categoryName:
-                                                                  'null'),
+                                                            categoryName:
+                                                                'null',
+                                                          ),
                                                     )
                                                     .categoryName
                                                     .toString(),
@@ -292,30 +299,32 @@ class _SellingPriceScreenState extends State<SellingPriceScreen> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                languagesController
-                                                    .tr("COMMISSION_TYPE"),
+                                                languagesController.tr(
+                                                  "COMMISSION_TYPE",
+                                                ),
                                               ),
                                               Text(
                                                 data.commissionType
                                                             .toString() ==
                                                         "percentage"
-                                                    ? languagesController
-                                                        .tr("PERCENTAGE")
-                                                    : languagesController
-                                                        .tr("FIXED"),
+                                                    ? languagesController.tr(
+                                                        "PERCENTAGE",
+                                                      )
+                                                    : languagesController.tr(
+                                                        "FIXED",
+                                                      ),
                                               ),
                                             ],
                                           ),
-                                          SizedBox(
-                                            height: 4,
-                                          ),
+                                          SizedBox(height: 4),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                languagesController
-                                                    .tr("AMOUNT"),
+                                                languagesController.tr(
+                                                  "AMOUNT",
+                                                ),
                                                 style: TextStyle(),
                                               ),
                                               Text(
@@ -324,15 +333,11 @@ class _SellingPriceScreenState extends State<SellingPriceScreen> {
                                               ),
                                             ],
                                           ),
-                                          SizedBox(
-                                            height: 4,
-                                          ),
+                                          SizedBox(height: 4),
                                         ],
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
+                                    SizedBox(width: 8),
                                     GestureDetector(
                                       onTap: () {
                                         showDialog(
@@ -350,16 +355,14 @@ class _SellingPriceScreenState extends State<SellingPriceScreen> {
                                         Icons.delete,
                                         color: Colors.red,
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
                             );
                           },
                         )
-                      : Center(
-                          child: CircularProgressIndicator(),
-                        ),
+                      : Center(child: CircularProgressIndicator()),
                 ),
               ),
             ],
@@ -371,15 +374,13 @@ class _SellingPriceScreenState extends State<SellingPriceScreen> {
 }
 
 class DeleteDialog extends StatelessWidget {
-  DeleteDialog({
-    super.key,
-    this.priceID,
-  });
+  DeleteDialog({super.key, this.priceID});
 
   String? priceID;
 
-  final DeleteSellingPriceController controller =
-      Get.put(DeleteSellingPriceController());
+  final DeleteSellingPriceController controller = Get.put(
+    DeleteSellingPriceController(),
+  );
   LanguagesController languagesController = Get.put(LanguagesController());
   @override
   Widget build(BuildContext context) {
@@ -394,14 +395,9 @@ class DeleteDialog extends StatelessWidget {
         children: [
           Text(
             languagesController.tr("DO_YOU_WANT_TO_DELETE"),
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
-          SizedBox(
-            height: 25,
-          ),
+          SizedBox(height: 25),
           Container(
             height: 50,
             width: screenWidth,
@@ -420,18 +416,19 @@ class DeleteDialog extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Center(
-                        child: Obx(
-                      () => Text(
-                        controller.isLoading.value == false
-                            ? languagesController.tr("YES")
-                            : languagesController.tr("PLEASE_WAIT"),
-                        style: TextStyle(
-                          color: Color(0xffFFFFFF),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                      child: Obx(
+                        () => Text(
+                          controller.isLoading.value == false
+                              ? languagesController.tr("YES")
+                              : languagesController.tr("PLEASE_WAIT"),
+                          style: TextStyle(
+                            color: Color(0xffFFFFFF),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                    )),
+                    ),
                   ),
                 ),
                 Spacer(),

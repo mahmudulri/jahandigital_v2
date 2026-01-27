@@ -1,18 +1,16 @@
 import 'dart:convert';
-
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
-
-import '../models/branch_model.dart';
-
+import '../models/setting_model.dart';
 import '../utils/api_endpoints.dart';
 
-class BranchApi {
+class SettingServiceApi {
   final box = GetStorage();
-  Future<BranchModel> fetchBranch() async {
+  Future<SettingModel> fetchsetting() async {
     final url = Uri.parse(
-      ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.branch,
+      "${ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.appsetting}",
     );
+    print(url);
 
     var response = await http.get(
       url,
@@ -21,9 +19,9 @@ class BranchApi {
 
     if (response.statusCode == 200) {
       // print(response.body.toString());
-      final branchModel = BranchModel.fromJson(json.decode(response.body));
+      final settingModel = SettingModel.fromJson(json.decode(response.body));
 
-      return branchModel;
+      return settingModel;
     } else {
       throw Exception('Failed to fetch gateway');
     }

@@ -26,7 +26,7 @@ class TransactionsType extends StatefulWidget {
 class _TransactionsTypeState extends State<TransactionsType> {
   final box = GetStorage();
 
-  LanguagesController languagesController = Get.put(LanguagesController());
+  final languagesController = Get.find<LanguagesController>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final dashboardController = Get.find<DashboardController>();
 
@@ -147,10 +147,7 @@ class _TransactionsTypeState extends State<TransactionsType> {
                             imagelink: "assets/icons/wallet.png",
                             mycolor: Color(0xff04B75D),
                             onpressed: () {
-                              mypagecontroller.changePage(
-                                ReceiptsScreen(),
-                                isMainPage: false,
-                              );
+                              mypagecontroller.openSubPage(ReceiptsScreen());
                             },
                           ),
                           SizedBox(height: 10),
@@ -161,10 +158,7 @@ class _TransactionsTypeState extends State<TransactionsType> {
                             imagelink: "assets/icons/transactionsicon.png",
                             mycolor: Color(0xff3498db),
                             onpressed: () {
-                              mypagecontroller.changePage(
-                                RequestLoanScreen(),
-                                isMainPage: false,
-                              );
+                              mypagecontroller.openSubPage(RequestLoanScreen());
                             },
                           ),
                           SizedBox(height: 10),
@@ -173,10 +167,7 @@ class _TransactionsTypeState extends State<TransactionsType> {
                             imagelink: "assets/icons/exchange.png",
                             mycolor: Color(0xffFE8F2D),
                             onpressed: () {
-                              mypagecontroller.changePage(
-                                HawalaListScreen(),
-                                isMainPage: false,
-                              );
+                              mypagecontroller.openSubPage(HawalaListScreen());
                             },
                           ),
                           SizedBox(height: 10),
@@ -185,9 +176,8 @@ class _TransactionsTypeState extends State<TransactionsType> {
                             imagelink: "assets/icons/exchange-rate.png",
                             mycolor: Color(0xff4B7AFC),
                             onpressed: () {
-                              mypagecontroller.changePage(
+                              mypagecontroller.openSubPage(
                                 HawalaCurrencyScreen(),
-                                isMainPage: false,
                               );
                             },
                           ),
@@ -199,10 +189,7 @@ class _TransactionsTypeState extends State<TransactionsType> {
                             imagelink: "assets/icons/transactionsicon.png",
                             mycolor: Color(0xffDE4B5E),
                             onpressed: () {
-                              mypagecontroller.changePage(
-                                Transactions(),
-                                isMainPage: false,
-                              );
+                              mypagecontroller.openSubPage(Transactions());
                             },
                           ),
                           SizedBox(height: 10),
@@ -213,9 +200,8 @@ class _TransactionsTypeState extends State<TransactionsType> {
                             imagelink: "assets/icons/transactionsicon.png",
                             mycolor: Color(0xff9b59b6),
                             onpressed: () {
-                              mypagecontroller.changePage(
+                              mypagecontroller.openSubPage(
                                 CommissionTransferScreen(),
-                                isMainPage: false,
                               );
                             },
                           ),
