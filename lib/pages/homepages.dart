@@ -48,52 +48,43 @@ class _HomepagesState extends State<Homepages> {
   final configController = Get.find<RechargeConfigController>();
   final customhistoryController = Get.find<CustomHistoryController>();
 
-  int currentindex = 0;
+  var currentSliderIndex = 0.obs;
 
-  int currentSliderindex = 0;
-
-  Timer? _timer;
   final box = GetStorage();
 
   int currentIndex = 0;
-
-  void _previousImage() {
-    setState(() {
-      currentIndex =
-          (currentIndex -
-              1 +
-              dashboardController
+  void startAutoSlider() {
+    Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (dashboardController
                   .alldashboardData
                   .value
-                  .data!
-                  .advertisementSliders!
-                  .length) %
+                  .data
+                  ?.advertisementSliders ==
+              null ||
           dashboardController
               .alldashboardData
               .value
               .data!
               .advertisementSliders!
-              .length;
-    });
-  }
+              .isEmpty) {
+        return;
+      }
 
-  void _nextImage() {
-    setState(() {
-      currentIndex =
-          (currentIndex + 1) %
-          dashboardController
-              .alldashboardData
-              .value
-              .data!
-              .advertisementSliders!
-              .length;
+      int sliderLength = dashboardController
+          .alldashboardData
+          .value
+          .data!
+          .advertisementSliders!
+          .length;
+
+      currentSliderIndex.value = (currentSliderIndex.value + 1) % sliderLength;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    print("kader");
+    startAutoSlider();
 
     // dashboardController.fetchDashboardData();
     configController.fetchrechargeConfig();
@@ -502,34 +493,25 @@ class _HomepagesState extends State<Homepages> {
                           Expanded(
                             child: Obx(() {
                               if (dashboardController.isLoading.value) {
-                                return SizedBox(); // লোডিং হলে কিছু দেখাবে না
+                                return const SizedBox();
                               }
-                              if (dashboardController
-                                          .alldashboardData
-                                          .value
-                                          .data!
-                                          .advertisementSliders ==
-                                      null ||
-                                  dashboardController
-                                      .alldashboardData
-                                      .value
-                                      .data!
-                                      .advertisementSliders!
-                                      .isEmpty) {
-                                return Container(
-                                  color: Colors.transparent,
-                                ); // যদি স্লাইডার না থাকে, তাহলে সাদা ব্যাকগ্রাউন্ড দেখাবে
+
+                              final sliders = dashboardController
+                                  .alldashboardData
+                                  .value
+                                  .data
+                                  ?.advertisementSliders;
+
+                              if (sliders == null || sliders.isEmpty) {
+                                return Container(color: Colors.transparent);
                               }
+
                               return Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   image: DecorationImage(
                                     image: NetworkImage(
-                                      dashboardController
-                                          .alldashboardData
-                                          .value
-                                          .data!
-                                          .advertisementSliders![currentIndex]
+                                      sliders[currentSliderIndex.value]
                                           .adSliderImageUrl
                                           .toString(),
                                     ),

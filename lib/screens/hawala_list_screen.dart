@@ -209,9 +209,8 @@ class _HawalaListScreenState extends State<HawalaListScreen> {
                                       content: HawalaDetailsDialog(
                                         id: data.id.toString(),
                                         hawalaNumber: data.hawalaNumber,
-                                        customHawalaNumber: data
-                                            .hawalaCustomNumber
-                                            .toString(),
+                                        hawalaCustomNumber:
+                                            data.hawalaCustomNumber,
                                         status: data.status,
                                         branchID: data.hawalaBranchId,
                                         senderName: data.senderName,
@@ -448,7 +447,7 @@ class HawalaDetailsDialog extends StatelessWidget {
     super.key,
     this.id,
     this.hawalaNumber,
-    this.customHawalaNumber,
+    this.hawalaCustomNumber,
     this.status,
     this.branchID,
     this.senderName,
@@ -465,7 +464,7 @@ class HawalaDetailsDialog extends StatelessWidget {
   });
   String? id;
   String? hawalaNumber;
-  String? customHawalaNumber;
+  String? hawalaCustomNumber;
   String? status;
   String? branchID;
   String? senderName;
@@ -564,9 +563,9 @@ class HawalaDetailsDialog extends StatelessWidget {
                                 style: TextStyle(fontSize: 14),
                               ),
                               Text(
-                                customHawalaNumber == null
+                                hawalaCustomNumber == null
                                     ? hawalaNumber.toString()
-                                    : customHawalaNumber.toString(),
+                                    : hawalaCustomNumber.toString(),
                                 style: TextStyle(fontSize: 14),
                               ),
                             ],
