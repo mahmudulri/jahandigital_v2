@@ -409,6 +409,30 @@ class _SocialBundlesState extends State<SocialBundles> {
                                 : SizedBox(),
                           ),
 
+                          Obx(
+                            () =>
+                                bundleController.isLoading.value == false &&
+                                    bundleController.finalList.isEmpty
+                                ? Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          "assets/icons/empty.png",
+                                          height: 80,
+                                        ),
+                                        Text(
+                                          languagesController.tr(
+                                            "NO_DATA_FOUND",
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox(),
+                          ),
+
                           Expanded(
                             child: Obx(
                               () =>

@@ -292,20 +292,11 @@ class _ChangeBalanceState extends State<ChangeBalance> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      Image.asset(
-                                        "assets/icons/afghanistan.png",
-                                        height: 30,
-                                      ),
                                       Text(
                                         box.read("currency_code"),
                                         style: TextStyle(
                                           color: Colors.grey.shade600,
                                         ),
-                                      ),
-                                      Icon(
-                                        FontAwesomeIcons.chevronDown,
-                                        color: Colors.grey.shade600,
-                                        size: screenHeight * 0.020,
                                       ),
                                     ],
                                   ),

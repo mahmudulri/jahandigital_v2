@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:jahandigital/controllers/network_checker.dart';
+import 'package:jahandigital/dependency_injection.dart';
 import 'package:jahandigital/routes/routes.dart';
 
 import 'global_controller/languages_controller.dart';
@@ -14,6 +14,8 @@ void main() async {
   await EasyLocalization.ensureInitialized();
   await GetStorage.init();
   Get.put(LanguagesController(), permanent: true);
+  // used for check real time internet accessv
+  DependencyInjection.init();
   runApp(
     EasyLocalization(
       supportedLocales: [
@@ -29,9 +31,6 @@ void main() async {
       child: MyApp(),
     ),
   );
-  // used for check real time internet access
-  // DependencyInjection.init();
-  //
 }
 
 class MyApp extends StatefulWidget {

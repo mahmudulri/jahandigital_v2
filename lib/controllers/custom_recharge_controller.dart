@@ -20,43 +20,6 @@ class CustomRechargeController extends GetxController {
   final customhistoryController = Get.find<CustomHistoryController>();
 
   RxBool isLoading = false.obs;
-  // RxBool placeingLoading = false.obs;
-
-  // RxBool loadsuccess = false.obs;
-
-  // Future<void> verify(BuildContext context) async {
-  //   try {
-  //     isLoading.value = true;
-  //     loadsuccess.value =
-  //         false; // Start with false, only set to true if successful.
-
-  //     var url = Uri.parse(
-  //       "${ApiEndPoints.baseUrl}confirm_pin?pin=${pinController.text}",
-  //     );
-
-  //     http.Response response = await http.get(
-  //       url,
-  //       headers: {'Authorization': 'Bearer ${box.read("userToken")}'},
-  //     );
-
-  //     final results = jsonDecode(response.body);
-
-  //     if (response.statusCode == 200 && results["success"] == true) {
-  //       pinController.clear();
-  //       loadsuccess.value =
-  //           true; // Mark as successful only if status and success are correct
-
-  //       // Proceed with placing the order
-  //       await placeOrder(context);
-  //     } else {
-  //       showErrorDialog(context, results["message"]);
-  //     }
-  //   } catch (e) {
-  //     showErrorDialog(context, e.toString());
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
 
   Future<void> placeOrder(BuildContext context) async {
     try {

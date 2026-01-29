@@ -33,9 +33,8 @@ class CreditTransfer extends StatefulWidget {
 class _CreditTransferState extends State<CreditTransfer> {
   final customhistoryController = Get.find<CustomHistoryController>();
   final currencyController = Get.find<CurrencyController>();
-
-  final countryListController = Get.find<CountryListController>();
   final languagesController = Get.find<LanguagesController>();
+
   CustomRechargeController customRechargeController = Get.put(
     CustomRechargeController(),
   );
@@ -219,7 +218,9 @@ class _CreditTransferState extends State<CreditTransfer> {
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: NetworkImage(
-                                    box.read("afghanistan_flag").toString(),
+                                    box
+                                        .read("afghanistan_flag")
+                                        .toString(), // coming from country list service
                                   ),
                                 ),
                               ),
@@ -564,6 +565,7 @@ class _CreditTransferState extends State<CreditTransfer> {
                             );
                           }),
                         ),
+
                         SizedBox(height: 10),
                         DefaultButton(
                           buttonName: languagesController.tr(
