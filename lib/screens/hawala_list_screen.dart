@@ -739,7 +739,7 @@ class HawalaDetailsDialog extends StatelessWidget {
                       flex: 1,
                       child: GestureDetector(
                         onTap: () async {
-                          capturePng();
+                          capturePng(catpureKey);
                         },
                         child: Container(
                           decoration: BoxDecoration(

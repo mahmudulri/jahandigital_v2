@@ -1787,7 +1787,7 @@ class _DetailsDialogState extends State<DetailsDialog> {
                       flex: 1,
                       child: GestureDetector(
                         onTap: () async {
-                          capturePng();
+                          capturePng(catpureKey);
                         },
                         child: Container(
                           decoration: BoxDecoration(
