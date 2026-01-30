@@ -7,9 +7,7 @@ import '../utils/api_endpoints.dart';
 class ProvinceApi {
   final box = GetStorage();
   Future<ProvincesModel> fetchProvince() async {
-    final url = Uri.parse(
-      "https://app-api-vpro-jd.milliekit.com/api/public/provinces",
-    );
+    final url = Uri.parse(ApiEndPoints.publicUrl + "provinces");
 
     var response = await http.get(
       url,

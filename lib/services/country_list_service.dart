@@ -10,9 +10,10 @@ import '../utils/api_endpoints.dart';
 class CountryListApi {
   final box = GetStorage();
   Future<CountryListModel> fetchCountryList() async {
-    final url = Uri.parse(
-      "https://app-api-vpro-jd.milliekit.com/api/public/countries",
-    );
+    // final url = Uri.parse(
+    //   "https://app-api-vpro-jd.milliekit.com/api/public/countries",
+    // );
+    final url = Uri.parse(ApiEndPoints.publicUrl + "countries");
     print(url);
 
     var response = await http.get(

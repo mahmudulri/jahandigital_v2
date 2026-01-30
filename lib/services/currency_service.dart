@@ -7,16 +7,13 @@ import '../utils/api_endpoints.dart';
 class CurrencyApi {
   final box = GetStorage();
   Future<CurrencyModel> fetchcurrency() async {
-    final url = Uri.parse(
-        "https://app-api-vpro-jd.milliekit.com/api/public/currencies");
+    final url = Uri.parse(ApiEndPoints.publicUrl + "currencies");
 
     print(url);
 
     var response = await http.get(
       url,
-      headers: {
-        'Authorization': 'Bearer ${box.read("userToken")}',
-      },
+      headers: {'Authorization': 'Bearer ${box.read("userToken")}'},
     );
 
     if (response.statusCode == 200) {
