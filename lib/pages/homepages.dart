@@ -24,6 +24,7 @@ import '../controllers/company_controller.dart';
 import '../controllers/custom_history_controller.dart';
 import '../controllers/recharge_config_controller.dart';
 import '../controllers/slider_controller.dart';
+import '../global_controller/activation_controller.dart';
 import '../global_controller/page_controller.dart';
 import '../screens/social_bundles.dart';
 
@@ -157,22 +158,17 @@ class _HomepagesState extends State<Homepages> {
 
   @override
   Widget build(BuildContext context) {
+    print(dashboardController.isLoading.value.toString());
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
-
     return Obx(() {
       if (dashboardController.isLoading.value) {
         return Scaffold(
-          body: Center(
-            child: GestureDetector(
-              onTap: () {
-                print(dashboardController.isLoading.value.toString());
-              },
-              child: CircularProgressIndicator(color: Colors.grey),
-            ),
-          ),
+          body: Center(child: CircularProgressIndicator(color: Colors.grey)),
         );
-      } else if (dashboardController.myerror.value.trim().toLowerCase() ==
+      } else if (dashboardController.deactiveStatus.value
+              .trim()
+              .toLowerCase() ==
           "deactivated") {
         return Scaffold(
           body: Center(
@@ -180,7 +176,8 @@ class _HomepagesState extends State<Homepages> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  dashboardController.myerror.toString(),
+                  textAlign: TextAlign.center,
+                  dashboardController.deactivateMessage.toString(),
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 10),
@@ -534,9 +531,6 @@ class _HomepagesState extends State<Homepages> {
                           customhistoryController.initialpage = 1;
                           customhistoryController.fetchHistory();
                           mypagecontroller.openSubPage(CreditTransfer());
-
-                          // print(box.read("afghanistan_id"));
-                          // print(box.read("afghanistan_flag"));
                         },
                       ),
                     ),

@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:jahandigital/controllers/country_list_controller.dart';
 import 'package:jahandigital/dependency_injection.dart';
 import 'package:jahandigital/routes/routes.dart';
 
+import 'controllers/categories_controller.dart';
+import 'controllers/dashboard_controller.dart';
+import 'controllers/sign_in_controller.dart';
+import 'global_controller/activation_controller.dart';
 import 'global_controller/languages_controller.dart';
 import 'global_controller/time_zone_controller.dart';
 
@@ -13,8 +18,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await GetStorage.init();
+  Get.put(SignInController(), permanent: true);
+  Get.put(DashboardController(), permanent: true);
+  Get.put(CategorisListController(), permanent: true);
+  Get.put(CountryListController(), permanent: true);
+
   Get.put(LanguagesController(), permanent: true);
-  // used for check real time internet accessv
+
   DependencyInjection.init();
   runApp(
     EasyLocalization(

@@ -48,7 +48,8 @@ class AddHawalaController extends GetxController {
       };
 
       var url = Uri.parse(
-          ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.hawalalist);
+        ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.hawalalist,
+      );
 
       Map body = {
         'sender_name': senderNameController.text,

@@ -10,28 +10,22 @@ class SubresellerController extends GetxController {
     fetchSubReseller();
   }
 
-  // @override
-  // void onInit() {
-  //   fetchSubReseller();
-  //   super.onInit();
-  // }
-
   var isLoading = false.obs;
 
   var allsubresellerData = SubResellerModel().obs;
 
-  void fetchSubReseller() async {
+  Future<void> fetchSubReseller() async {
+    print("fetchSubReseller called");
+
     try {
-      isLoading(true);
-      await SubResellerApi().fetchSubReseller().then((value) {
-        allsubresellerData.value = value;
+      isLoading.value = true;
 
-        isLoading(false);
-      });
-
-      isLoading(false);
+      final value = await SubResellerApi().fetchSubReseller();
+      allsubresellerData.value = value;
     } catch (e) {
-      print(e.toString());
+      print("Error: $e");
+    } finally {
+      isLoading.value = false; // ✅ এক জায়গায়
     }
   }
 }

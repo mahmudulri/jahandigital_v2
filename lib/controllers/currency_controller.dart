@@ -5,8 +5,9 @@ import '../models/currency_model.dart';
 import '../services/currency_service.dart';
 
 class CurrencyController extends GetxController {
-  ConversationController conversationController =
-      Get.put(ConversationController());
+  ConversationController conversationController = Get.put(
+    ConversationController(),
+  );
   var isLoading = false.obs;
 
   final box = GetStorage();
@@ -20,8 +21,9 @@ class CurrencyController extends GetxController {
         allcurrency.value = value;
 
         if (allcurrency.value.data?.currencies != null) {
-          conversationController.currencies
-              .addAll(allcurrency.value.data!.currencies!);
+          conversationController.currencies.addAll(
+            allcurrency.value.data!.currencies!,
+          );
 
           String codeFromBox = box.read("currency_code") ?? "";
 
@@ -31,7 +33,8 @@ class CurrencyController extends GetxController {
             conversationController.resellerRate =
                 double.tryParse(matchedCurrency.exchangeRatePerUsd!) ?? 0.0;
             print(
-                "Matched Exchange Rate: ${matchedCurrency.exchangeRatePerUsd}");
+              "Matched Exchange Rate: ${matchedCurrency.exchangeRatePerUsd}",
+            );
           } else {
             print("Currency with code $codeFromBox not found.");
           }

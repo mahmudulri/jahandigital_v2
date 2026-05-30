@@ -455,7 +455,9 @@ class _CreditTransferState extends State<CreditTransfer> {
                                               ),
                                               SizedBox(width: 6),
                                               Text(
-                                                "Buying",
+                                                languagesController.tr(
+                                                  "BUYING",
+                                                ),
                                                 style: TextStyle(
                                                   fontSize: 11,
                                                   color: Colors.orange[700],
@@ -527,7 +529,9 @@ class _CreditTransferState extends State<CreditTransfer> {
                                               ),
                                               SizedBox(width: 6),
                                               Text(
-                                                "Selling",
+                                                languagesController.tr(
+                                                  "SELLING",
+                                                ),
                                                 style: TextStyle(
                                                   fontSize: 11,
                                                   color: Colors.green[700],
@@ -582,7 +586,9 @@ class _CreditTransferState extends State<CreditTransfer> {
                                     .text
                                     .isEmpty) {
                               Fluttertoast.showToast(
-                                msg: "Enter required data",
+                                msg: languagesController.tr(
+                                  "ENTER_REQUIRED_DATA",
+                                ),
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 timeInSecForIosWeb: 1,

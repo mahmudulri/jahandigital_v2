@@ -33,10 +33,7 @@ class PaymentButton extends StatelessWidget {
           decoration: BoxDecoration(
             // color: mycolor,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              width: 1,
-              color: Colors.grey.shade400,
-            ),
+            border: Border.all(width: 1, color: Colors.grey.shade400),
           ),
           child: Stack(
             children: [

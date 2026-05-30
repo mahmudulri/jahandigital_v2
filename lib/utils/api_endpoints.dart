@@ -6,7 +6,8 @@ class ApiEndPoints {
   // static String baseUrl =
   //     "https://app-api-vpro-wl-waslat.milliekit.com/api/reseller/";
 
-  // static String publicUrl = "https://app-api-vpro-wl-waslat.milliekit.com/api/public/";
+  // static String publicUrl =
+  //     "https://app-api-vpro-wl-waslat.milliekit.com/api/public/";
 
   static OtherendPoints otherendpoints = OtherendPoints();
 }

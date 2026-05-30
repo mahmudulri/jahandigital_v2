@@ -10,8 +10,9 @@ import 'package:image_picker/image_picker.dart';
 import '../utils/api_endpoints.dart';
 import 'sub_reseller_controller.dart';
 
-final SubresellerController subresellerController =
-    Get.put(SubresellerController());
+final SubresellerController subresellerController = Get.put(
+  SubresellerController(),
+);
 
 class AddSubResellerController extends GetxController {
   // ---------- Images ----------
@@ -80,9 +81,7 @@ class AddSubResellerController extends GetxController {
     try {
       isLoading.value = true;
 
-      final headers = {
-        'Authorization': 'Bearer ${box.read("userToken")}',
-      };
+      final headers = {'Authorization': 'Bearer ${box.read("userToken")}'};
 
       final Map<String, String> fields = {
         'reseller_name': resellerNameController.text.trim(),
@@ -107,27 +106,33 @@ class AddSubResellerController extends GetxController {
 
       // attach files if present
       if (selectedImagePath.value.isNotEmpty) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'profile_image_url',
-          selectedImagePath.value,
-          filename: "profile.jpg",
-        ));
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'profile_image_url',
+            selectedImagePath.value,
+            filename: "profile.jpg",
+          ),
+        );
       }
 
       if (selectedIdentityPath.value.isNotEmpty) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'reseller_identity_attachment',
-          selectedIdentityPath.value,
-          filename: "identity.jpg",
-        ));
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'reseller_identity_attachment',
+            selectedIdentityPath.value,
+            filename: "identity.jpg",
+          ),
+        );
       }
 
       if (selectedExtraProofPath.value.isNotEmpty) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'extra_optional_proof',
-          selectedExtraProofPath.value,
-          filename: "extra_proof.jpg",
-        ));
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'extra_optional_proof',
+            selectedExtraProofPath.value,
+            filename: "extra_proof.jpg",
+          ),
+        );
       }
 
       // send

@@ -8,19 +8,19 @@ class SubResellerApi {
   final box = GetStorage();
   Future<SubResellerModel> fetchSubReseller() async {
     final url = Uri.parse(
-        ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.subreseller);
+      ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.subreseller,
+    );
 
     var response = await http.get(
       url,
-      headers: {
-        'Authorization': 'Bearer ${box.read("userToken")}',
-      },
+      headers: {'Authorization': 'Bearer ${box.read("userToken")}'},
     );
 
     if (response.statusCode == 200) {
       // print(response.body.toString());
-      final subresellerModel =
-          SubResellerModel.fromJson(json.decode(response.body));
+      final subresellerModel = SubResellerModel.fromJson(
+        json.decode(response.body),
+      );
 
       return subresellerModel;
     } else {

@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import '../models/setting_model.dart';
-import '../services/branch_service.dart';
 import '../services/setting_service.dart';
 
 class SettingController extends GetxController {

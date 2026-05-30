@@ -24,13 +24,11 @@ class CreateTransferController extends GetxController {
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer ${box.read("userToken")}'
+        'Authorization': 'Bearer ${box.read("userToken")}',
       };
       var url = Uri.parse("${ApiEndPoints.baseUrl}earning-transfer");
 
-      Map body = {
-        'amount': amountController.text,
-      };
+      Map body = {'amount': amountController.text};
       http.Response response = await http.post(
         url,
         body: jsonEncode(body),
@@ -43,13 +41,14 @@ class CreateTransferController extends GetxController {
       if (response.statusCode == 200) {
         if (results["success"] == true) {
           Fluttertoast.showToast(
-              msg: results["message"],
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0);
+            msg: results["message"],
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
           amountController.clear();
 
           dashboardController.fetchDashboardData();

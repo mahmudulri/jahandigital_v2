@@ -275,16 +275,11 @@ class _SignInScreenState extends State<SignInScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              print(box.read("userToken"));
-                            },
-                            child: Text(
-                              languagesController.tr("ENTER_YOUR_LOGIN_INFO"),
-                              style: TextStyle(
-                                color: Colors.grey.shade500,
-                                fontSize: screenHeight * 0.020,
-                              ),
+                          Text(
+                            languagesController.tr("ENTER_YOUR_LOGIN_INFO"),
+                            style: TextStyle(
+                              color: Colors.grey.shade500,
+                              fontSize: screenHeight * 0.020,
                             ),
                           ),
                         ],
@@ -333,35 +328,19 @@ class _SignInScreenState extends State<SignInScreen> {
                   SizedBox(height: 15),
                   GestureDetector(
                     onTap: () async {
-                      if (signInController.usernameController.text.isEmpty ||
-                          signInController.passwordController.text.isEmpty) {
+                      if (signInController.usernameController.text
+                              .trim()
+                              .isEmpty ||
+                          signInController.passwordController.text
+                              .trim()
+                              .isEmpty) {
                         Get.snackbar("Oops!", "Fill the text fields");
-                      } else {
-                        print("Attempting login...");
-                        await signInController.signIn();
-
-                        if (signInController.loginsuccess.value == false) {
-                          dashboardController.fetchDashboardData();
-                          // Navigating to the BottomNavigationbar page
-                          // countryListController.fetchCountryData();
-                          Get.toNamed(basescreen);
-
-                          // if (box.read("direction") == "rtl") {
-                          //   setState(() {
-                          //     EasyLocalization.of(context)!
-                          //         .setLocale(Locale('ar', 'AE'));
-                          //   });
-                          // } else {
-                          //   setState(() {
-                          //     EasyLocalization.of(context)!
-                          //         .setLocale(Locale('en', 'US'));
-                          //   });
-                          // }
-                        } else {
-                          print("Navigation conditions not met.");
-                        }
+                        return;
                       }
+
+                      await signInController.signIn();
                     },
+
                     child: Container(
                       height: screenHeight * 0.060,
                       width: screenWidth,

@@ -1097,7 +1097,6 @@ class _RechargeScreenState extends State<RechargeScreen> {
                                                                               style: TextStyle(
                                                                                 fontSize: 18,
                                                                                 fontWeight: FontWeight.bold,
-                                                                                letterSpacing: 8,
                                                                               ),
                                                                             ),
                                                                           ],
@@ -2083,7 +2082,6 @@ class _RechargeScreenState extends State<RechargeScreen> {
                                                                               style: TextStyle(
                                                                                 fontSize: 18,
                                                                                 fontWeight: FontWeight.bold,
-                                                                                letterSpacing: 8,
                                                                               ),
                                                                             ),
                                                                           ],

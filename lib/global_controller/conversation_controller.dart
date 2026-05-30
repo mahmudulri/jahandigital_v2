@@ -25,7 +25,7 @@ class ConversationController extends GetxController {
     final afnCurrency = currencies.firstWhereOrNull((c) => c.code == "AFN");
 
     if (afnCurrency == null || afnCurrency.exchangeRatePerUsd == null) {
-      return []; // যদি AFN না থাকে বা null থাকে, কিছুই রিটার্ন করো না
+      return [];
     }
 
     // Parse the AFN rate

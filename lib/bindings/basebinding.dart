@@ -26,8 +26,6 @@ import '../global_controller/languages_controller.dart';
 class Basebinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<SignInController>(() => SignInController());
-    Get.lazyPut<DashboardController>(() => DashboardController());
     Get.lazyPut<TransactionController>(() => TransactionController());
     Get.lazyPut<OrderlistController>(() => OrderlistController());
     Get.lazyPut<SubresellerController>(() => SubresellerController());
@@ -37,7 +35,6 @@ class Basebinding implements Bindings {
 
     Get.lazyPut<AddSubResellerController>(() => AddSubResellerController());
 
-    Get.lazyPut<CountryListController>(() => CountryListController());
     Get.lazyPut<ProvinceController>(() => ProvinceController());
     Get.lazyPut<DistrictController>(() => DistrictController());
     Get.lazyPut<ServiceController>(() => ServiceController());

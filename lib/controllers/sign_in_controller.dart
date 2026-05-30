@@ -1,37 +1,42 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:jahandigital/controllers/dashboard_controller.dart';
-import 'package:jahandigital/utils/api_endpoints.dart';
+import 'package:jahandigital/pages/network.dart';
+import 'package:jahandigital/screens/base_screen.dart';
+
+import '../routes/routes.dart';
+import '../utils/api_endpoints.dart';
+import 'country_list_controller.dart';
+import 'dashboard_controller.dart';
+
+final dashboardController = Get.find<DashboardController>();
+final countrylistController = Get.find<CountryListController>();
 
 class SignInController extends GetxController {
   final box = GetStorage();
-
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  // final CountryListController countryListController =
-  //     Get.put(CountryListController());
 
   RxBool isLoading = false.obs;
   RxBool loginsuccess = false.obs;
-
-  final dashboardController = Get.find<DashboardController>();
 
   Future<void> signIn() async {
     try {
       isLoading.value = true;
       loginsuccess.value = true; // Reset to false before starting login
-      print(loginsuccess.value);
+
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       };
 
-      var url = Uri.parse("${ApiEndPoints.baseUrl}login");
-
+      var url = Uri.parse(
+        ApiEndPoints.baseUrl + ApiEndPoints.otherendpoints.loginIink,
+      );
       print("API URL: $url");
 
       Map body = {
@@ -41,32 +46,30 @@ class SignInController extends GetxController {
 
       // Map body = {
       //   'username': "0700930683",
-      //   'password': "12345678",
+      //   'password': "test@2024",
       // };
 
-      // print("Request Body: $body");
+      print("Request Body: $body");
 
       http.Response response = await http.post(
         url,
         body: jsonEncode(body),
         headers: headers,
       );
-      print(response.statusCode.toString());
 
       final results = jsonDecode(response.body);
       // print("Response Status Code: ${response.statusCode}");
-      print("Response Body: ${response.statusCode}");
+      // print("Response Body: ${response.body}");
 
       if (response.statusCode == 200) {
-        // dashboardController.fetchDashboardData();
         box.write("userToken", results["data"]["api_token"]);
-        box.write(
-          "countryID",
-          results["data"]["user_info"]["reseller"]["country_id"],
-        );
         box.write(
           "currency_code",
           results["data"]["user_info"]["currency"]["code"],
+        );
+        box.write(
+          "countryID",
+          results["data"]["user_info"]["reseller"]["country_id"],
         );
         box.write(
           "currencypreferenceID",
@@ -80,10 +83,12 @@ class SignInController extends GetxController {
           "resellerrate",
           results["data"]["user_info"]["currency"]["exchange_rate_per_usd"],
         );
+        dashboardController.fetchDashboardData();
+        countrylistController.fetchCountryData();
+        Get.toNamed(basescreen);
 
         if (results["success"] == true) {
           loginsuccess.value = false;
-          // sliderController.fetchSliderData();
           print(loginsuccess.value);
 
           Fluttertoast.showToast(
@@ -98,20 +103,10 @@ class SignInController extends GetxController {
 
           // Fetch country data only if login is successful
         } else {
-          Get.snackbar(
-            results["message"],
-            results["errors"],
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-          );
+          _showError(results);
         }
       } else {
-        Get.snackbar(
-          results["message"],
-          results["errors"],
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        _showError(results);
       }
     } catch (e) {
       print("Error during sign in: $e");
@@ -119,4 +114,29 @@ class SignInController extends GetxController {
       isLoading.value = false;
     }
   }
+}
+
+/// ✅ Handles both String and Map error formats
+void _showError(dynamic results) {
+  String errorMessage = "Login failed";
+
+  if (results["errors"] is String) {
+    errorMessage = results["errors"];
+  } else if (results["errors"] is Map) {
+    // Extract first validation message
+    final errorsMap = results["errors"] as Map;
+    if (errorsMap.isNotEmpty) {
+      final firstError = errorsMap.values.first;
+      if (firstError is List && firstError.isNotEmpty) {
+        errorMessage = firstError.first.toString();
+      }
+    }
+  }
+
+  Get.snackbar(
+    results["message"] ?? "Error",
+    errorMessage,
+    backgroundColor: Colors.red,
+    colorText: Colors.white,
+  );
 }
