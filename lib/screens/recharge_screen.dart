@@ -209,7 +209,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                             ),
                           ),
                           child: Center(
-                            child: Icon(FontAwesomeIcons.chevronLeft),
+                            child: FaIcon(FontAwesomeIcons.chevronLeft),
                           ),
                         ),
                       ),

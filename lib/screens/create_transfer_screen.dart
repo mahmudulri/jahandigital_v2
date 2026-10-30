@@ -78,7 +78,7 @@ class _CreateTransferScreenState extends State<CreateTransferScreen> {
                             ),
                           ),
                           child: Center(
-                            child: Icon(FontAwesomeIcons.chevronLeft),
+                            child: FaIcon(FontAwesomeIcons.chevronLeft),
                           ),
                         ),
                       ),

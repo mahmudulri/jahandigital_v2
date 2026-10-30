@@ -411,7 +411,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           onTap: () {
                             whatsapp();
                           },
-                          child: Icon(FontAwesomeIcons.whatsapp, size: 40),
+                          child: FaIcon(FontAwesomeIcons.whatsapp, size: 40),
                         ),
                         SizedBox(width: 50),
                         GestureDetector(
@@ -428,7 +428,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           onTap: () {
                             _makePhoneCall(phoneNumber);
                           },
-                          child: Icon(FontAwesomeIcons.phone, size: 28),
+                          child: FaIcon(FontAwesomeIcons.phone, size: 28),
                         ),
                       ],
                     ),

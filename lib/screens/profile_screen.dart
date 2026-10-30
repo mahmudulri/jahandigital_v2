@@ -82,7 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                           child: Center(
-                            child: Icon(FontAwesomeIcons.chevronLeft),
+                            child: FaIcon(FontAwesomeIcons.chevronLeft),
                           ),
                         ),
                       ),

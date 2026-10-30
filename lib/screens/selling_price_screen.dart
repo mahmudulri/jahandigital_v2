@@ -82,7 +82,7 @@ class _SellingPriceScreenState extends State<SellingPriceScreen> {
                             ),
                           ),
                           child: Center(
-                            child: Icon(FontAwesomeIcons.chevronLeft),
+                            child: FaIcon(FontAwesomeIcons.chevronLeft),
                           ),
                         ),
                       ),

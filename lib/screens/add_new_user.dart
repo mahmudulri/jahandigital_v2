@@ -126,7 +126,7 @@ class _AddNewUserState extends State<AddNewUser> {
                             ),
                           ),
                           child: Center(
-                            child: Icon(FontAwesomeIcons.chevronLeft),
+                            child: FaIcon(FontAwesomeIcons.chevronLeft),
                           ),
                         ),
                       ),
@@ -381,7 +381,7 @@ class _AddNewUserState extends State<AddNewUser> {
                           0.7,
                         ),
                         radius: 18,
-                        child: const Icon(
+                        child: const FaIcon(
                           FontAwesomeIcons.chevronDown,
                           color: Colors.white,
                           size: 17,
@@ -528,7 +528,7 @@ class _AddNewUserState extends State<AddNewUser> {
                           0.7,
                         ),
                         radius: 18,
-                        child: const Icon(
+                        child: const FaIcon(
                           FontAwesomeIcons.chevronDown,
                           color: Colors.white,
                           size: 17,
@@ -643,7 +643,7 @@ class _AddNewUserState extends State<AddNewUser> {
                           0.7,
                         ),
                         radius: 18,
-                        child: const Icon(
+                        child: const FaIcon(
                           FontAwesomeIcons.chevronDown,
                           color: Colors.white,
                           size: 17,
@@ -758,7 +758,7 @@ class _AddNewUserState extends State<AddNewUser> {
                           0.7,
                         ),
                         radius: 18,
-                        child: const Icon(
+                        child: const FaIcon(
                           FontAwesomeIcons.chevronDown,
                           color: Colors.white,
                           size: 17,

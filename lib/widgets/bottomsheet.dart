@@ -79,7 +79,7 @@ class _CustomFullScreenSheetState extends State<CustomFullScreenSheet> {
                     ),
                   ),
                   Center(
-                    child: Icon(
+                    child: FaIcon(
                       FontAwesomeIcons.chevronDown,
                       color: Colors.white,
                       size: 30,
@@ -400,7 +400,7 @@ class _CustomFullScreenSheetState extends State<CustomFullScreenSheet> {
                               ),
                               child: Row(
                                 children: [
-                                  Icon(
+                                  FaIcon(
                                     FontAwesomeIcons.whatsapp,
                                     color: Colors.white,
                                   ),

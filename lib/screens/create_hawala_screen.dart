@@ -125,7 +125,7 @@ class _HawalaScreenState extends State<HawalaScreen> {
                               ),
                             ),
                             child: Center(
-                              child: Icon(FontAwesomeIcons.chevronLeft),
+                              child: FaIcon(FontAwesomeIcons.chevronLeft),
                             ),
                           ),
                         ),
@@ -431,7 +431,7 @@ class _HawalaScreenState extends State<HawalaScreen> {
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.zero,
                               ),
-                              icon: Icon(
+                              icon: FaIcon(
                                 FontAwesomeIcons.chevronDown,
                                 color: Colors.grey,
                                 size: 20,
@@ -496,7 +496,7 @@ class _HawalaScreenState extends State<HawalaScreen> {
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.zero,
                     ),
-                    icon: const Icon(
+                    icon: const FaIcon(
                       FontAwesomeIcons.chevronDown,
                       color: Colors.grey,
                       size: 20, // larger like the other dropdowns
@@ -620,7 +620,7 @@ class _HawalaScreenState extends State<HawalaScreen> {
                         contentPadding: EdgeInsets.zero,
                       ),
 
-                      icon: const Icon(
+                      icon: const FaIcon(
                         FontAwesomeIcons.chevronDown,
                         color: Colors.grey,
                         size: 20,

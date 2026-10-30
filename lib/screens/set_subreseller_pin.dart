@@ -76,7 +76,7 @@ class _SetSubresellerPinState extends State<SetSubresellerPin> {
                             ),
                           ),
                           child: Center(
-                            child: Icon(FontAwesomeIcons.chevronLeft),
+                            child: FaIcon(FontAwesomeIcons.chevronLeft),
                           ),
                         ),
                       ),

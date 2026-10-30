@@ -148,7 +148,7 @@ class _CreditTransferState extends State<CreditTransfer> {
                               ),
                             ),
                             child: Center(
-                              child: Icon(FontAwesomeIcons.chevronLeft),
+                              child: FaIcon(FontAwesomeIcons.chevronLeft),
                             ),
                           ),
                         ),
@@ -923,7 +923,7 @@ class _CreditTransferState extends State<CreditTransfer> {
                                                               MainAxisSize.min,
                                                           children: [
                                                             SizedBox(width: 5),
-                                                            Icon(
+                                                            FaIcon(
                                                               FontAwesomeIcons
                                                                   .chevronDown,
                                                               size:
@@ -1177,7 +1177,7 @@ class _CreditTransferState extends State<CreditTransfer> {
                                                             MainAxisSize.min,
                                                         children: [
                                                           SizedBox(width: 5),
-                                                          Icon(
+                                                          FaIcon(
                                                             FontAwesomeIcons
                                                                 .chevronDown,
                                                             size:

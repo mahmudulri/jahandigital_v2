@@ -105,7 +105,7 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                             ),
                           ),
                           child: Center(
-                            child: Icon(FontAwesomeIcons.chevronLeft),
+                            child: FaIcon(FontAwesomeIcons.chevronLeft),
                           ),
                         ),
                       ),
@@ -201,7 +201,7 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                     icon: CircleAvatar(
                       backgroundColor: AppColors.primaryColor.withOpacity(0.7),
                       radius: 15,
-                      child: Icon(
+                      child: FaIcon(
                         FontAwesomeIcons.chevronDown,
                         color: Colors.white,
                         size: 17,
@@ -397,7 +397,7 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                                     backgroundColor: AppColors.primaryColor
                                         .withOpacity(0.7),
                                     radius: 14,
-                                    child: Icon(
+                                    child: FaIcon(
                                       FontAwesomeIcons.chevronDown,
                                       color: Colors.white,
                                       size: 17,
@@ -548,7 +548,7 @@ class _CreatePaymentsScreenState extends State<CreatePaymentsScreen> {
                     icon: CircleAvatar(
                       backgroundColor: AppColors.primaryColor.withOpacity(0.7),
                       radius: 14,
-                      child: Icon(
+                      child: FaIcon(
                         FontAwesomeIcons.chevronDown,
                         color: Colors.white,
                         size: 17,

@@ -68,7 +68,7 @@ class _HawalaCurrencyScreenState extends State<HawalaCurrencyScreen> {
                             ),
                           ),
                           child: Center(
-                            child: Icon(FontAwesomeIcons.chevronLeft),
+                            child: FaIcon(FontAwesomeIcons.chevronLeft),
                           ),
                         ),
                       ),

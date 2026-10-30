@@ -68,7 +68,7 @@ class _CommissionGroupScreenState extends State<CommissionGroupScreen> {
                             ),
                           ),
                           child: Center(
-                            child: Icon(FontAwesomeIcons.chevronLeft),
+                            child: FaIcon(FontAwesomeIcons.chevronLeft),
                           ),
                         ),
                       ),
@@ -416,7 +416,7 @@ class _CreateGroupBoxState extends State<CreateGroupBox> {
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.zero,
                   ),
-                  icon: Icon(
+                  icon: FaIcon(
                     FontAwesomeIcons.chevronDown,
                     size: screenHeight * 0.018,
                     color: Colors.grey,

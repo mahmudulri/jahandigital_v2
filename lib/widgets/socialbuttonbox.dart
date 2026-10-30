@@ -73,19 +73,19 @@ void showSocialPopup(BuildContext context) {
                   ),
 
                   // ✅ WhatsApp button uses custom function
-                  _socialButton(
-                    icon: FontAwesomeIcons.whatsapp,
-                    label: "WhatsApp",
-                    color: Colors.green,
-                    url: "", // not used
-                    isWhatsApp: true,
-                  ),
-                  _socialButton(
-                    icon: FontAwesomeIcons.youtube,
-                    label: "Youtube",
-                    color: Colors.red,
-                    url: "https://www.youtube.com/@jahan_tech-l5r", // not used
-                  ),
+                  // _socialButton(
+                  //   icon: FontAwesomeIcons.whatsapp,
+                  //   label: "WhatsApp",
+                  //   color: Colors.green,
+                  //   url: "", // not used
+                  //   isWhatsApp: true,
+                  // ),
+                  // _socialButton(
+                  //   icon: FontAwesomeIcons.youtube,
+                  //   label: "Youtube",
+                  //   color: Colors.red,
+                  //   url: "https://www.youtube.com/@jahan_tech-l5r", // not used
+                  // ),
                 ],
               ),
 
